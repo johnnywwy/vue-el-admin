@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-      <el-button>el-button</el-button>
+    <div class="card">
+      <div class="card-header">头部</div>
+      <div class="card-body">头部</div>
+      <div class="card-footer">头部</div>
+    </div>
   </div>
 </template>
 
@@ -8,7 +12,16 @@
 
 export default {
   name: 'app',
-  components: {}
+  data() {
+    return {
+      radio: '1'
+    };
+  },
+  methods:{
+    change(e){
+      console.log(e)
+    }
+  }
 }
 </script>
 
