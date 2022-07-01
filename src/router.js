@@ -8,8 +8,15 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-    path: '/',
-    name: 'layout',
-    component: layout
-  }]
+      path: '/',
+      name: 'layout',
+      component: layout,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: ()=>import('./views/login/index.vue'),
+
+    }
+  ]
 })
