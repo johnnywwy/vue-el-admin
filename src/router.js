@@ -11,11 +11,18 @@ export default new Router({
       path: '/',
       name: 'layout',
       component: layout,
+      children: [
+        {
+          path: '/index',
+          name: 'index',
+          component: () => import('./views/index/index'),
+        }
+      ]
     },
     {
       path: '/login',
       name: 'login',
-      component: ()=>import('./views/login/index.vue'),
+      component: () => import('./views/login/index.vue'),
 
     }
   ]
