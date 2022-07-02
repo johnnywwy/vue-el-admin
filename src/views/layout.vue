@@ -62,6 +62,9 @@
             </el-breadcrumb>
           </div>
           <router-view></router-view>
+          <template>
+            <el-backtop target=".el-main"></el-backtop>
+          </template>
         </el-main>
       </el-container>
     </el-container>
@@ -191,6 +194,7 @@ export default {
 
     > .el-menu {
 
+
       > .el-menu-item {
       }
 
@@ -211,15 +215,19 @@ export default {
     overflow: hidden;
 
     > .el-aside {
+      border-right: 1px solid #e6e6e6;
+
       .el-menu {
+        border-right: 0;
       }
     }
 
     > .el-main {
-      background-color: #E9EEF3;
       color: #333;
+      background: #f8f9fa;
 
       .el-breadcrumb {
+        background: white;
         padding: 20px;
         margin: -20px;
         border-bottom: 1px solid #ccc;
