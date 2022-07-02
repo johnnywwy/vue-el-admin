@@ -10,26 +10,20 @@ let routes = [
     path: '/',
     name: 'layout',
     redirect: {name: 'index'},
-    // component: () => import('../../views/layout/layout.vue'),
     component: 'layout',
     children: [
       {
-        path: '/index',
-        name: 'index',
-        // component: () => import('../../views/index/index.vue'),
+        meta: {title: '后台首页'},
         component: 'index/index',
       },
       {
-        path: '/shop/goods/list',
-        name: 'shop_goods_list',
+        meta: {title: '商品列表'},
         component: 'shop/goods/list',
-      }
+      },
     ]
   },
   {
-    path: '/login',
-    name: 'login',
-    // component: () => import('../../views/login/index.vue'),
+    meta: {title: '登录页'},
     component: 'login/index',
   },
   {
@@ -51,7 +45,7 @@ function createRoute(arr) {
     if (!arr[i].component) return
 
     //生成name
-    let val = getValue(arr[i].name)
+    let val = getValue(arr[i].component)
     arr[i].name = arr[i].name || val.replace(/\//g, '_')
 
     //生成path

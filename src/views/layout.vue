@@ -35,7 +35,7 @@
         <el-aside width="200px">
           <el-row>
             <el-col>
-              <el-menu default-active="1" @select="slideSelect">
+              <el-menu default-active="0" @select="slideSelect">
                 <el-menu-item
                     :index="index|numToString"
                     v-for="(item,index) in slideMenus"
@@ -50,15 +50,18 @@
         <!--主内容布局-->
         <el-main>
           <!--面包屑导航-->
-          <div>
+          <div v-if="bran.length > 0">
             <el-breadcrumb separator-class="el-icon-arrow-right">
-              <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-              <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-              <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-              <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+              <el-breadcrumb-item
+                  v-for="(item,index) in bran"
+                  :key="index"
+                  :to="{path:item.path}"
+              >
+                {{ item.title }}
+              </el-breadcrumb-item>
             </el-breadcrumb>
           </div>
-          <h3>123456789</h3>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -72,30 +75,94 @@ export default {
   mixins: [common],
   data() {
     return {
-      navBar: []
+      navBar: [],
+      bran: []
     };
   },
   created() {
     //初始化菜单
     this.navBar = this.$conf.navBar
+    //获取面包屑导航
+    this.getRouterBran()
+    //初始化选中菜单
+    this.initNavBar()
+
   },
   computed: {
-    slideMenuActive() {
-      return this.navBar.list[this.navBar.active].subActive || '0'
+    slideMenuActive: {
+      get() {
+        return this.navBar.list[this.navBar.active].subActive || '0'
+      },
+      set(val) {
+        this.navBar.list[this.navBar.active].subActive = val
+      }
     },
     slideMenus() {
       return this.navBar.list[this.navBar.active].submenu || []
     }
   },
+  watch: {
+    '$route'() {
+      //本地存储
+      localStorage.setItem('navActive', JSON.stringify({
+        top: this.navBar.active,
+        left: this.slideMenuActive
+      }))
+
+      this.getRouterBran()
+    }
+  },
   methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+    //获取面包屑导航
+    getRouterBran() {
+      let hasName = this.$route.matched.filter(value => value.name)
+      let arr = []
+      hasName.forEach((value) => {
+        if (value.name === 'index' || value.name === 'layout') return
+        arr.push({
+          name: value.name,
+          path: value.path,
+          title: value.meta.title,
+        })
+      })
+      if (arr.length > 0) {
+        arr.unshift({name: 'index', path: '/index', title: '后台首页'})
+      }
+      this.bran = arr
+
+    },
+
+    //顶部导航栏
+    handleSelect(key) {
       this.navBar.active = key
+      //  默认跳转第一个
+      this.slideMenuActive = '0'
+      if (this.slideMenus.length > 0) {
+        this.$router.push({
+          name: this.slideMenus[this.slideMenuActive].pathname
+        })
+      }
     },
-    slideSelect(key, keyPath) {
-      console.log(key, keyPath);
-      this.navBar.list[this.navBar.active].subActive = key
+
+    //侧边导航栏
+    slideSelect(key) {
+      this.slideMenuActive = key
+      //  跳转指定页面
+      this.$router.push({
+        name: this.slideMenus[key].pathname
+      })
     },
+
+    //
+    initNavBar() {
+      let value = localStorage.getItem('navActive')
+      if (value) {
+        value = JSON.parse(value)
+        this.navBar.active = value.top
+        this.slideMenuActive = value.left
+      }
+
+    }
   }
 }
 </script>
@@ -111,6 +178,8 @@ export default {
   overflow: hidden;
 
   > .el-header {
+    background-color: #545c64;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -122,7 +191,8 @@ export default {
 
     > .el-menu {
 
-      > .el-menu-item {}
+      > .el-menu-item {
+      }
 
       > .el-submenu {
 
@@ -146,26 +216,17 @@ export default {
     }
 
     > .el-main {
+      background-color: #E9EEF3;
+      color: #333;
+
       .el-breadcrumb {
         padding: 20px;
         margin: -20px;
-        border-bottom: 2px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 15px
       }
     }
   }
-
-
-  .el-header {
-    background-color: #545c64;
-    color: #fff;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-  }
-
-
 }
 
 
