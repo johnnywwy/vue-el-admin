@@ -35,7 +35,7 @@
         <el-aside width="200px">
           <el-row>
             <el-col>
-              <el-menu default-active="0" @select="slideSelect">
+              <el-menu :default-active="slideMenuActive" @select="slideSelect">
                 <el-menu-item
                     :index="index|numToString"
                     v-for="(item,index) in slideMenus"
