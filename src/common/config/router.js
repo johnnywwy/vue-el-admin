@@ -10,7 +10,7 @@ let routes = [
     path: '/',
     name: 'layout',
     redirect: {name: 'index'},
-    // component: () => import('../../views/layout.vue'),
+    // component: () => import('../../views/layout/layout.vue'),
     component: 'layout',
     children: [
       {
