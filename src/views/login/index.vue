@@ -1,16 +1,66 @@
 <template>
   <div>
-    登录
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-9 col-md-7 col-lg-5 m-auto pt-5">
+          <div class="card mt-5">
+            <div class="card-header bg-white ">
+              <h3 class="text-center mb-0 text-secondary">UNI-ADMIN</h3>
+            </div>
+            <div class="card-body">
+              <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+                <el-form-item prop="username">
+                  <el-input v-model="form.username" size="medium" placeholder="请输入用户名"></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                  <el-input v-model="form.password" size="medium" placeholder="请输入密码" type="password"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" size="medium" class="w-100" @click="submit">立即登录</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'index'
-
+  name: 'index',
+  data() {
+    return {
+      form: {
+        username: '',
+        password: '',
+      },
+      rules: {
+        username: [
+          {required: true, message: '请输入用户名', trigger: 'blur'},
+          {min: 5, max: 15, message: '长度在 5 到 15 个字符', trigger: 'blur'}
+        ],
+        password: [
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {min: 10, max: 30, message: '长度在 10 到 30 个字符', trigger: 'blur'}
+        ],
+      }
+    }
+  },
+  methods: {
+    submit() {
+      this.$refs.ruleForm.validate((e) => {
+        if (!e) return
+        this.$router.push({name: 'index'})
+      })
+    }
+  }
 };
 </script>
 
-<style lang="scss">
-
+<style>
+.lalala {
+  /*border: 1px solid red;*/
+}
 </style>
