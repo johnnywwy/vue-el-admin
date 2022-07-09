@@ -1,0 +1,70 @@
+<template>
+  <li class="list-group-item list-group-item-action"
+      @click.stop="albumChange(index)"
+      :class="{'active list-group-item-active':active}">
+    {{ item.name }}
+    <el-dropdown>
+                  <span class="btn btn-light btn-sm">
+                    {{ item.num }}
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item
+            @click.stop.native="openAlbumModel({index,item})">
+          修改
+        </el-dropdown-item>
+        <el-dropdown-item
+            @click.stop.native="albumDel(index)">
+          删除
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+  </li>
+</template>
+
+<script>
+export default {
+  name: 'album-item',
+  props: {
+    item: Object,
+    index: Number,
+    active: {
+      type: Boolean,
+      default: false
+    }
+
+
+  },
+  methods:{
+    albumChange(index){
+      this.$emit('change',index)
+    },
+    openAlbumModel({index,item}){
+      this.$emit('edit',{index,item})
+    },
+    albumDel(index){
+      this.$emit('del',index)
+    }
+  }
+
+};
+</script>
+
+<style lang="scss">
+.list-group-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &-active {
+    color: #67c23A;
+    background: #f0f9eb;
+    border-color: #c2e7b0;
+  }
+
+  .el-dropdown {
+    margin-left: auto;
+  }
+}
+
+</style>

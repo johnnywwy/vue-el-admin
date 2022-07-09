@@ -137,6 +137,12 @@ export default {
 
     //顶部导航栏
     handleSelect(key) {
+      if (key === '100-1') {
+        return console.log('修改资料')
+      }
+      if (key === '100-2') {
+        return console.log('退出')
+      }
       this.navBar.active = key
       //  默认跳转第一个
       this.slideMenuActive = '0'
@@ -225,6 +231,7 @@ export default {
     > .el-main {
       color: #333;
       background: #f8f9fa;
+      position: relative;
 
       .el-breadcrumb {
         background: white;
