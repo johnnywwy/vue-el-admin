@@ -63,7 +63,7 @@
           </div>
           <router-view></router-view>
           <template>
-            <el-backtop target=".el-main"></el-backtop>
+            <el-backtop target=".el-main" style="right: 40px;bottom: 80px"></el-backtop>
           </template>
         </el-main>
       </el-container>
@@ -240,6 +240,7 @@ export default {
         border-bottom: 1px solid #ccc;
         margin-bottom: 15px
       }
+
     }
   }
 }

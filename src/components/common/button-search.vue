@@ -9,12 +9,17 @@
           <el-input v-model="keyword" size="mini"
                     :placeholder="placeholder" class="input">
           </el-input>
-          <el-button type="info" size="mini" @click="$emit('search',keyword)">搜索</el-button>
-          <el-button size="mini" @click="superSearch=true">高级搜索</el-button>
+          <el-button type="info" size="mini"
+                     @click="$emit('search',keyword)">搜索
+          </el-button>
+          <el-button size="mini"
+                     @click="superSearch=true">高级搜索
+          </el-button>
         </slot>
       </div>
     </div>
-    <el-card class="card-wrapper box-card bg-light my-3" v-show="superSearch">
+    <el-card class="card-wrapper box-card bg-light my-3"
+             v-show="superSearch">
       <div slot="header" class="clearfix header">
         <span>高级搜索</span>
         <el-button style="float: right; padding: 3px 0" type="text"
