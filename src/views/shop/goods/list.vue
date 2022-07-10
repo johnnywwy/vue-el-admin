@@ -93,7 +93,13 @@ export default {
     },
     //  清空所有
     clearAllSearch() {
-
+      this.form = {
+        name: '',
+        code: '',
+        type: '',
+        category: ''
+      }
+      // this.toggleSearch()
     }
   }
 
