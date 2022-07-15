@@ -8,7 +8,10 @@
         <button-search placeholder="要搜索的商品名称" ref="buttonSearch" @search="search">
           <template #left>
             <!--左边按钮-->
-            <el-button type="success" size="mini">发布商品</el-button>
+            <router-link :to="{name:'shop_goods_create'}">
+              <el-button type="success" size="mini">发布商品</el-button>
+
+            </router-link>
             <el-button type="danger" size="mini">批量删除</el-button>
             <el-button type="warning" size="mini">恢复商品</el-button>
             <el-button size="mini">上架</el-button>
@@ -221,7 +224,7 @@ export default {
 
 <style lang="scss" scoped>
 .wrapper {
-  //border: 1px solid red;
+  border: 1px solid red;
   background: white;
   margin: -20px;
   margin-top: -15px;
