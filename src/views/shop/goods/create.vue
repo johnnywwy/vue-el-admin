@@ -118,9 +118,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
+import goods_create from '../../../store/modules/goods_create'
+
 export default {
-  name: 'create',
   data() {
     return {
       tabIndex: 0,
@@ -340,6 +341,10 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    console.log('111')
+    console.log(this.$store.state.goods_create.ceshi);
   },
   methods: {
     //加载数据
