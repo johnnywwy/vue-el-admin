@@ -61,54 +61,93 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="商品规格">
-        <el-form ref="form" label-width="80px">
+
+        <!--规格选项-->
+        <el-form>
           <el-form-item label="商品规格">
             <el-radio-group v-model="skus_type" size="medium">
               <el-radio-button :label="0">单一规格</el-radio-button>
               <el-radio-button :label="1">多规格</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="添加规格">
-            <div class="card addRule">
-              <div class="card-header">
-                规格项：
-                <el-input size="mini">
-                  <el-button slot="append" icon="el-icon-more"></el-button>
-                </el-input>
-                <el-radio-group size="mini">
-                  <el-radio :label="1">无</el-radio>
-                  <el-radio :label="2">颜色</el-radio>
-                  <el-radio :label="3">图片</el-radio>
-                </el-radio-group>
-                <el-button class="ml-auto" icon="el-icon-arrow-up" size="mini"></el-button>
-                <el-button icon="el-icon-arrow-down" size="mini"></el-button>
-                <el-button size="mini">删除</el-button>
-              </div>
-              <div class="card-body">
-                <div>
-                  <el-button type="text" size="mini" icon="el-icon-plus">
-                    增加规格值
-                  </el-button>
+        </el-form>
+        <!--单规格-->
+        <template v-if="skus_type===0">
+          <el-form>
+            <el-form-item label="市场价格">
+              <el-input type="number" class="w-25" placeholder="">
+                <template slot="append">元</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="销售价格">
+              <el-input type="number" class="w-25" placeholder="">
+                <template slot="append">元</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="成本价格">
+              <el-input type="number" class="w-25" placeholder="">
+                <template slot="append">元</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="商品重量">
+              <el-input type="number" class="w-25" placeholder="">
+                <template slot="append">公斤</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="商品体积">
+              <el-input type="number" class="w-25" placeholder="">
+                <template slot="append">立方米</template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+
+        </template>
+
+        <!--多规格-->
+        <template  v-else>
+          <el-form ref="form" label-width="80px">
+            <el-form-item label="添加规格">
+              <div class="card addRule">
+                <div class="card-header">
+                  规格项：
+                  <el-input size="mini">
+                    <el-button slot="append" icon="el-icon-more"></el-button>
+                  </el-input>
+                  <el-radio-group size="mini">
+                    <el-radio :label="1">无</el-radio>
+                    <el-radio :label="2">颜色</el-radio>
+                    <el-radio :label="3">图片</el-radio>
+                  </el-radio-group>
+                  <el-button class="ml-auto" icon="el-icon-arrow-up" size="mini"></el-button>
+                  <el-button icon="el-icon-arrow-down" size="mini"></el-button>
+                  <el-button size="mini">删除</el-button>
+                </div>
+                <div class="card-body">
+                  <div>
+                    <el-button type="text" size="mini" icon="el-icon-plus">
+                      增加规格值
+                    </el-button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <el-button type="success" size="mini">立即创建</el-button>
-          </el-form-item>
-          <el-form-item label="批量设置">
-            <el-button type="text">销售价</el-button>
-            <el-button type="text">市场价</el-button>
-            <el-button type="text">成本价</el-button>
-            <el-button type="text">库存</el-button>
-            <el-button type="text">体积</el-button>
-            <el-button type="text">重量</el-button>
-          </el-form-item>
-          <el-form-item label="规格设置">
-            规格设置
-          </el-form-item>
-          <el-form-item label="添加规格">
-            添加规格
-          </el-form-item>
-        </el-form>
+              <el-button type="success" size="mini">立即创建</el-button>
+            </el-form-item>
+            <el-form-item label="批量设置">
+              <el-button type="text">销售价</el-button>
+              <el-button type="text">市场价</el-button>
+              <el-button type="text">成本价</el-button>
+              <el-button type="text">库存</el-button>
+              <el-button type="text">体积</el-button>
+              <el-button type="text">重量</el-button>
+            </el-form-item>
+            <el-form-item label="规格设置">
+              规格设置
+            </el-form-item>
+            <el-form-item label="添加规格">
+              添加规格
+            </el-form-item>
+          </el-form>
+        </template>
       </el-tab-pane>
       <el-tab-pane label="商品属性">商品属性</el-tab-pane>
       <el-tab-pane label="媒体属性">媒体属性</el-tab-pane>
@@ -119,15 +158,16 @@
 </template>
 
 <script>
-import goods_create from '../../../store/modules/goods_create'
+import {mapState} from 'vuex'
 
 export default {
   data() {
     return {
       tabIndex: 0,
+      value: [],
       //商品规格
       skus_type: 0,
-      value: [],
+
       form: {
         title: '',
         category: [],
@@ -138,7 +178,6 @@ export default {
         display_stock: 0,
         status: 0,
         express: ''
-
       },
       //级联选择框数据
       options: [
@@ -342,9 +381,14 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapState({
+      ceshi: state => state.goods_create.ceshi
+    }),
+    //  其他计算属性
+  },
   mounted() {
-    console.log('111')
-    console.log(this.$store.state.goods_create.ceshi);
+    console.log(this.ceshi);
   },
   methods: {
     //加载数据
