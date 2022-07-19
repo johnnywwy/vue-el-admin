@@ -10,50 +10,67 @@
       <el-tab-pane label="基础设置">
         <el-form ref="form" label-width="80px">
           <el-form-item label="商品名称">
-            <el-input v-model="form.title" class="w-50" placeholder="请输入商品名称，不能超过60个字符">
+            <el-input :value="title"
+                      placeholder="请输入商品名称，不能超过60个字符"
+                      @input="vModel('title', $event)" class="w-50">
             </el-input>
           </el-form-item>
           <el-form-item label="商品分类">
             <el-cascader
-                v-model="form.category"
+                @input="vModel('category', $event)"
+                :value="category"
                 :options="options">
             </el-cascader>
           </el-form-item>
           <el-form-item label="商品描述">
-            <el-input type="textarea" v-model="form.desc" class="w-50"
+            <el-input type="textarea" :value="desc"
+                      @input="vModel('desc', $event)" class="w-50"
                       placeholder="选填，商品卖点简述，例如：此款商品美观大方 性价比高 不容错过">
             </el-input>
           </el-form-item>
           <el-form-item label="商品单位">
-            <el-input v-model="form.unit" class="w-50"
-                      placeholder="请输入商品单位">
+            <el-input :value="unit" @input="vModel('unit', $event)"
+                      placeholder="请输入商品单位" class="w-50">
             </el-input>
           </el-form-item>
           <el-form-item label="总库存">
-            <el-input type="number" v-model="form.stock" class="w-25" placeholder="">
+            <el-input type="number" :value="stock"
+                      @input="vModel('stock', $event)"
+                      class="w-25" placeholder="总库存">
               <template slot="append">件</template>
             </el-input>
           </el-form-item>
           <el-form-item label="库存预警">
-            <el-input type="number" v-model="form.min_stock" class="w-25"
-                      placeholder="">
+            <el-input type="number" class="w-25"
+                      :value="min_stock"
+                      @input="vModel('min_stock', $event)"
+                      placeholder="库存预警">
               <template slot="append">件</template>
             </el-input>
           </el-form-item>
           <el-form-item label="库存显示">
-            <el-radio-group v-model="form.display_stock">
+            <el-radio-group
+                :value="display_stock"
+                @input="vModel('display_stock', $event)"
+            >
               <el-radio :label="1" border>是</el-radio>
               <el-radio :label="0" border>否</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="是否上架">
-            <el-radio-group v-model="form.status">
+            <el-radio-group
+                :value="status"
+                @input="vModel('status', $event)"
+            >
               <el-radio :label="0" border>放入仓库</el-radio>
               <el-radio :label="1" border>立即上架</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="运费模板">
-            <el-select v-model="form.express" placeholder="请选择运费模板">
+            <el-select
+                :value="express"
+                @input="vModel('express', $event)"
+                placeholder="请选择运费模板">
               <el-option label="上海" value="shanghai"></el-option>
               <el-option label="北京" value="beijing"></el-option>
             </el-select>
@@ -61,41 +78,59 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="商品规格">
-
         <!--规格选项-->
-        <el-form>
+        <el-form ref="form" label-width="80px">
           <el-form-item label="商品规格">
-            <el-radio-group v-model="skus_type" size="medium">
+            <el-radio-group :value="skus_type" size="medium"
+                            @input="vModel('skus_type', $event)">
               <el-radio-button :label="0">单一规格</el-radio-button>
               <el-radio-button :label="1">多规格</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-form>
+
         <!--单规格-->
         <template v-if="skus_type===0">
           <el-form>
             <el-form-item label="市场价格">
-              <el-input type="number" class="w-25" placeholder="">
+              <el-input type="number" class="w-25" :value="oprice"
+                        @input="vModel('oprice', $event)" placeholder="">
                 <template slot="append">元</template>
               </el-input>
             </el-form-item>
             <el-form-item label="销售价格">
-              <el-input type="number" class="w-25" placeholder="">
+              <el-input type="number"
+                        class="w-25"
+                        :value="pprice"
+                        @input="vModel('pprice', $event)"
+                        placeholder="销售价格">
                 <template slot="append">元</template>
               </el-input>
             </el-form-item>
             <el-form-item label="成本价格">
-              <el-input type="number" class="w-25" placeholder="">
+              <el-input type="number"
+                        class="w-25"
+                        :value="cprice"
+                        @input="vModel('cprice', $event)"
+                        placeholder="成本价格">
                 <template slot="append">元</template>
               </el-input>
             </el-form-item>
             <el-form-item label="商品重量">
-              <el-input type="number" class="w-25" placeholder="">
+              <el-input type="number"
+                        class="w-25"
+                        :value="weight"
+                        @input="vModel('weight', $event)"
+                        placeholder="商品重量">
                 <template slot="append">公斤</template>
               </el-input>
             </el-form-item>
             <el-form-item label="商品体积">
-              <el-input type="number" class="w-25" placeholder="">
+              <el-input type="number"
+                        class="w-25"
+                        :value="volume"
+                        @input="vModel('volume', $event)"
+                        placeholder="商品体积">
                 <template slot="append">立方米</template>
               </el-input>
             </el-form-item>
@@ -104,7 +139,7 @@
         </template>
 
         <!--多规格-->
-        <template  v-else>
+        <template v-else>
           <el-form ref="form" label-width="80px">
             <el-form-item label="添加规格">
               <div class="card addRule">
@@ -158,27 +193,13 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 
 export default {
   data() {
     return {
       tabIndex: 0,
       value: [],
-      //商品规格
-      skus_type: 0,
-
-      form: {
-        title: '',
-        category: [],
-        desc: '',
-        unit: '',
-        stock: 0,
-        min_stock: 0,
-        display_stock: 0,
-        status: 0,
-        express: ''
-      },
       //级联选择框数据
       options: [
         {
@@ -383,17 +404,39 @@ export default {
   },
   computed: {
     ...mapState({
-      ceshi: state => state.goods_create.ceshi
+      skus_type: state => state.goods_create.skus_type,
+      title: state => state.goods_create.title,
+      category: state => state.goods_create.category,
+      desc: state => state.goods_create.desc,
+      unit: state => state.goods_create.unit,
+      stock: state => state.goods_create.stock,
+      min_stock: state => state.goods_create.min_stock,
+      display_stock: state => state.goods_create.display_stock,
+      status: state => state.goods_create.status,
+      express: state => state.goods_create.express,
+
+      oprice: state => state.goods_create.oprice,
+      pprice: state => state.goods_create.pprice,
+      cprice: state => state.goods_create.cprice,
+      weight: state => state.goods_create.weight,
+      volume: state => state.goods_create.volume,
     }),
     //  其他计算属性
   },
   mounted() {
-    console.log(this.ceshi);
+    this.vModel({
+      key: 'skus_type',
+      value: 1
+    })
   },
   methods: {
+    ...mapMutations(['vModelState']),
+    //修改表单的值
+    vModel(key, value) {
+      this.vModelState({key, value})
+    },
     //加载数据
-    handleClick(tab) {
-      console.log('tab.index', tab.index);
+    handleClick() {
     },
   }
 
