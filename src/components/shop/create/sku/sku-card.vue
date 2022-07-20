@@ -15,14 +15,24 @@
             <el-radio :label="1">颜色</el-radio>
             <el-radio :label="2">图片</el-radio>
           </el-radio-group>
-          <el-button class="ml-auto" icon="el-icon-arrow-up" size="mini"></el-button>
-          <el-button icon="el-icon-arrow-down" size="mini"></el-button>
+          <!--上移-->
+          <el-button
+              class="ml-auto" icon="el-icon-arrow-up" :disabled="index===0"
+              size="mini" @click="sortCard('moveUp',index)"></el-button>
+          <!--下移-->
+          <el-button
+              icon="el-icon-arrow-down" size="mini" :disabled="skuCardTotal===index+1"
+              @click="sortCard('moveDown',index)"></el-button>
+          <!--删除-->
           <el-button size="mini" @click="delSkuCard(index)">删除</el-button>
         </div>
         <div class="card-body">
           <!--规格属性列表-->
+          <div class="tab-wrapper">
+            <sku-card-children :type="item.type"></sku-card-children>
+          </div>
           <!--增加规格-->
-          <div>
+          <div class="mt-2">
             <el-button
                 type="text" size="mini"
                 icon="el-icon-plus">
@@ -42,19 +52,28 @@
 </template>
 
 <script>
+import skuCardChildren from './sku-card-children'
 import {mapMutations, mapState} from 'vuex'
 
 export default {
+  components: {skuCardChildren},
   computed: {
     ...mapState({
       sku_card: state => state.goods_create.sku_card
-    })
+    }),
+    skuCardTotal() {
+      return this.sku_card.length
+    }
+
   },
   methods: {
-    ...mapMutations(['addSkuCard', 'delSkuCard', 'vModelSkuCard']),
+    ...mapMutations(['addSkuCard', 'delSkuCard', 'vModelSkuCard', 'sortSkuCard']),
     vModel(key, index, value) {
       this.vModelSkuCard({key, index, value})
-
+    },
+    //排序规则卡片
+    sortCard(action, index) {
+      this.sortSkuCard({action, index})
     }
   }
 
@@ -77,6 +96,35 @@ export default {
     .el-radio-group {
       margin-left: 20px;
       margin-bottom: -10px;
+    }
+
+  }
+
+  .card-body {
+
+    .tab-wrapper {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+
+      div:first-child {
+        //border: 1px solid red;
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        .close-btn {
+          position: absolute;
+          top: -10px;
+          right: -10px;
+          line-height: 1;
+        }
+
+        input {
+          text-align: center;
+          width: 70px;
+        }
+      }
     }
   }
 }

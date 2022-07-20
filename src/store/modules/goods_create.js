@@ -1,3 +1,5 @@
+import $Util from '../../common/util'
+
 export default {
   state: {
     skus_type: 0, //sku类型 0单一 1多规格
@@ -49,8 +51,12 @@ export default {
     //  修改卡片
     vModelSkuCard(state, {key, index, value}) {
       state.sku_card[index][key] = value
-    }
+    },
     //  规格卡片排序
+    sortSkuCard(state, {action, index}) {
+      //上移
+      $Util[action](state.sku_card, index)
+    }
 
   },
   action: {}
