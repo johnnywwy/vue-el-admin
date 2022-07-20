@@ -224,7 +224,7 @@ export default {
 
 <style lang="scss" scoped>
 .wrapper {
-  border: 1px solid red;
+  //border: 1px solid red;
   background: white;
   margin: -20px;
   margin-top: -15px;
