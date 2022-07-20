@@ -1,73 +1,72 @@
 <template>
-  <el-form ref="form" label-width="80px">
-    <el-form-item label="添加规格">
-      <div
-          class="card addRule" :key="index"
-          v-for="(item,index) in sku_card">
-        <div class="card-header">
-          规格项：
-          <el-input size="mini" :value="item.name"
-                    @input="vModel('name',index,$event)">
-            <el-button slot="append" icon="el-icon-more"></el-button>
-          </el-input>
-          <el-radio-group size="mini" :value="item.type" @input="vModel('type',index,$event)">
-            <el-radio :label="0">无</el-radio>
-            <el-radio :label="1">颜色</el-radio>
-            <el-radio :label="2">图片</el-radio>
-          </el-radio-group>
-          <!--上移-->
-          <el-button
-              class="ml-auto" icon="el-icon-arrow-up" :disabled="index===0"
-              size="mini" @click="sortCard('moveUp',index)"></el-button>
-          <!--下移-->
-          <el-button
-              icon="el-icon-arrow-down" size="mini" :disabled="skuCardTotal===index+1"
-              @click="sortCard('moveDown',index)"></el-button>
-          <!--删除-->
-          <el-button size="mini" @click="delSkuCard(index)">删除</el-button>
-        </div>
-        <div class="card-body">
-          <!--规格属性列表-->
-          <div class="tab-wrapper">
-            <sku-card-children :type="item.type"></sku-card-children>
-          </div>
-          <!--增加规格-->
-          <div class="mt-2">
-            <el-button
-                type="text" size="mini"
-                icon="el-icon-plus">
-              增加规格值
-            </el-button>
-          </div>
-        </div>
-      </div>
+  <div class="card addRule">
+    <div class="card-header">
+      规格项：
+      <el-input size="mini" :value="item.name"
+                @input="vModel('name',index,$event)">
+        <el-button slot="append" icon="el-icon-more"></el-button>
+      </el-input>
+      <el-radio-group size="mini" :value="item.type" @input="vModel('type',index,$event)">
+        <el-radio :label="0">无</el-radio>
+        <el-radio :label="1">颜色</el-radio>
+        <el-radio :label="2">图片</el-radio>
+      </el-radio-group>
+      <!--上移-->
       <el-button
-          type="success"
-          size="mini"
-          @click="addSkuCard">
-        添加规格
-      </el-button>
-    </el-form-item>
-  </el-form>
+          class="ml-auto" icon="el-icon-arrow-up" :disabled="index===0"
+          size="mini" @click="sortCard('moveUp',index)"></el-button>
+      <!--下移-->
+      <el-button
+          icon="el-icon-arrow-down" size="mini" :disabled="total===index+1"
+          @click="sortCard('moveDown',index)"></el-button>
+      <!--删除-->
+      <el-button size="mini" @click="delSkuCard(index)">删除</el-button>
+    </div>
+    <div class="card-body">
+      <!--规格属性列表-->
+      <div class="tab-wrapper">
+        <sku-card-children
+            :type="item.type" :key="index2"
+            v-for="(item2,index2) in item.list"
+            :item="item2" :index="index2"
+            :card-index="index" :value-index="index2"
+        >
+        </sku-card-children>
+      </div>
+      <!--增加规格-->
+      <div class="mt-2">
+        <el-button
+            type="text" size="mini"
+            icon="el-icon-plus"
+            @click="addSkuValue(index)"
+        >
+          增加规格值
+        </el-button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import skuCardChildren from './sku-card-children'
-import {mapMutations, mapState} from 'vuex'
+import {mapMutations} from 'vuex'
 
 export default {
-  components: {skuCardChildren},
-  computed: {
-    ...mapState({
-      sku_card: state => state.goods_create.sku_card
-    }),
-    skuCardTotal() {
-      return this.sku_card.length
-    }
-
+  props: {
+    item: Object,
+    index: Number,
+    total: Number
   },
+  components: {skuCardChildren},
   methods: {
-    ...mapMutations(['addSkuCard', 'delSkuCard', 'vModelSkuCard', 'sortSkuCard']),
+    ...mapMutations(
+        [
+          'delSkuCard',
+          'vModelSkuCard',
+          'sortSkuCard',
+          'addSkuValue',
+        ]
+    ),
     vModel(key, index, value) {
       this.vModelSkuCard({key, index, value})
     },
@@ -107,7 +106,7 @@ export default {
       align-items: center;
       flex-wrap: wrap;
 
-      div:first-child {
+      div {
         //border: 1px solid red;
         display: flex;
         align-items: center;
@@ -122,7 +121,8 @@ export default {
 
         input {
           text-align: center;
-          width: 70px;
+          width: 80px;
+          font-size: 15px;
         }
       }
     }

@@ -24,7 +24,17 @@ export default {
       {
         name: '颜色',
         type: 0,
-        list: []
+        list: [
+          {
+            name: '黄色',
+            image: '',
+            color: ''
+          }, {
+            name: '红色',
+            image: '',
+            color: ''
+          }
+        ]
       }
     ]
 
@@ -56,7 +66,20 @@ export default {
     sortSkuCard(state, {action, index}) {
       //上移
       $Util[action](state.sku_card, index)
+    },
+    //  增加指定规格卡片属性
+    addSkuValue(state, index) {
+      state.sku_card[index].list.push({
+        name: '规格名称',
+        image: '',
+        color: ''
+      })
+    },
+    //  删除指定规格卡片的规格属性
+    delSkuValue(state, {cardIndex,valueIndex}) {
+      state.sku_card[cardIndex].list.splice(valueIndex, 1)
     }
+
 
   },
   action: {}
