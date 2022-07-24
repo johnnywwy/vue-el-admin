@@ -4,11 +4,13 @@
       <!--颜色选择器-->
       <el-color-picker size="mini" v-if="type===1"></el-color-picker>
       <!--图片选择器-->
-      <span v-else class="btn btn-light border">
+      <span v-else class="btn btn-light border" @click="chooseImage">
         <i class="el-icon-plus"></i>
       </span>
     </div>
-    <input type="text" :value="item.name" class="form-control border-0">
+    <input
+        type="text" :value="item.name" @input="inputChange"
+        class="form-control border-0">
     <!--删除按钮-->
     <span class="btn btn-light p-0 close-btn">
       <i class="el-icon-circle-close" @click="delSkuValue({cardIndex,valueIndex})"></i>
@@ -21,20 +23,34 @@ import {mapMutations} from 'vuex'
 
 export default {
   name: 'sku-card-children',
+  inject: ['app'],
   props: {
     type: {
       type: Number,
       default: 0
     },
     item: Object,
-    index: Number,
     cardIndex: Number,
     valueIndex: Number
 
-
   },
   methods: {
-    ...mapMutations(['delSkuValue'])
+    ...mapMutations(['delSkuValue', 'updateSkuValue']),
+    inputChange(e) {
+      this.vModel('name', e.target.value)
+    },
+    vModel(key, value) {
+      this.updateSkuValue({
+        cardIndex: this.cardIndex,
+        valueIndex: this.valueIndex,
+        key,
+        value
+      })
+    },
+    //选择图片
+    chooseImage() {
+      this.app.show()
+    }
   }
 
 };

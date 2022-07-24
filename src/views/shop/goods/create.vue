@@ -3,7 +3,6 @@
     <router-link :to="{name:'shop_goods_list'}" class="linkBtn">
       <el-button size="mini">回到商品列表</el-button>
     </router-link>
-
     <el-tabs class="el-tabs-wrapper"
              v-model="tabIndex"
              @tab-click="handleClick">
@@ -50,7 +49,7 @@
               <el-button type="text">重量</el-button>
             </el-form-item>
             <el-form-item label="规格设置">
-              规格设置
+              <sku-table></sku-table>
             </el-form-item>
             <el-form-item label="添加规格">
               添加规格
@@ -71,9 +70,10 @@ import {mapState, mapMutations} from 'vuex'
 import baseCreate from '../../../components/shop/create/base-create'
 import singleAttrs from '../../../components/shop/create/single-attrs'
 import skuCard from '../../../components/shop/create/sku/sku-card'
+import skuTable from '../../../components/shop/create/sku-table'
 
 export default {
-  components: {baseCreate, singleAttrs, skuCard},
+  components: {baseCreate, singleAttrs, skuCard, skuTable},
   data() {
     return {
       tabIndex: 0,
@@ -91,10 +91,7 @@ export default {
     }
   },
   mounted() {
-    this.vModel({
-      key: 'skus_type',
-      value: 1
-    })
+    this.vModel({key: 'skus_type', value: 1})
   },
   methods: {
     ...mapMutations(['vModelState', 'addSkuCard']),

@@ -11,6 +11,7 @@
         <el-radio :label="1">颜色</el-radio>
         <el-radio :label="2">图片</el-radio>
       </el-radio-group>
+
       <!--上移-->
       <el-button
           class="ml-auto" icon="el-icon-arrow-up" :disabled="index===0"
@@ -27,9 +28,10 @@
       <div class="tab-wrapper">
         <sku-card-children
             :type="item.type" :key="index2"
-            v-for="(item2,index2) in item.list"
+            v-for="(item2,index2) in list"
             :item="item2" :index="index2"
             :card-index="index" :value-index="index2"
+            v-dragging="{ item: item2, list: list, group: `skuItem${index}` }"
         >
         </sku-card-children>
       </div>
@@ -52,12 +54,18 @@ import skuCardChildren from './sku-card-children'
 import {mapMutations} from 'vuex'
 
 export default {
+  components: {skuCardChildren},
+
   props: {
     item: Object,
     index: Number,
     total: Number
   },
-  components: {skuCardChildren},
+  data() {
+    return {
+      list: this.item.list
+    }
+  },
   methods: {
     ...mapMutations(
         [
@@ -65,6 +73,7 @@ export default {
           'vModelSkuCard',
           'sortSkuCard',
           'addSkuValue',
+          'sortSkuValue'
         ]
     ),
     vModel(key, index, value) {
@@ -73,7 +82,17 @@ export default {
     //排序规则卡片
     sortCard(action, index) {
       this.sortSkuCard({action, index})
-    }
+    },
+  },
+  mounted() {
+    this.$dragging.$on('dragend', (e) => {
+      if (e.group === 'skuItem' + this.index) {
+        this.sortSkuValue({
+          index: this.index,
+          value: this.list
+        })
+      }
+    })
   }
 
 };
