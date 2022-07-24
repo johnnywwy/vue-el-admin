@@ -3,11 +3,15 @@
       @click.stop="albumChange(index)"
       :class="{'active list-group-item-active':active}">
     {{ item.name }}
-    <el-dropdown>
-                  <span class="btn btn-light btn-sm">
-                    {{ item.num }}
-                    <i class="el-icon-arrow-down el-icon--right"></i>
-                  </span>
+
+    <span class="btn btn-light btn-sm ml-auto" v-if="!showOptions">
+        {{ item.num }}
+    </span>
+    <el-dropdown v-else>
+      <span class="btn btn-light btn-sm">
+        {{ item.num }}
+        <i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item
             @click.stop.native="openAlbumModel({index,item})">
@@ -31,19 +35,23 @@ export default {
     active: {
       type: Boolean,
       default: false
+    },
+    showOptions: {
+      type: Boolean,
+      default: true
     }
 
 
   },
-  methods:{
-    albumChange(index){
-      this.$emit('change',index)
+  methods: {
+    albumChange(index) {
+      this.$emit('change', index)
     },
-    openAlbumModel({index,item}){
-      this.$emit('edit',{index,item})
+    openAlbumModel({index, item}) {
+      this.$emit('edit', {index, item})
     },
-    albumDel(index){
-      this.$emit('del',index)
+    albumDel(index) {
+      this.$emit('del', index)
     }
   }
 

@@ -20,19 +20,6 @@
               @click="unChoose"
               v-if="chooseImageList.length">取消选中
           </el-button>
-          <el-button
-              type="danger" size="mini"
-              @click="delImage({all:true})"
-              v-if="chooseImageList.length">批量删除
-          </el-button>
-          <el-button
-              type="success" size="mini"
-              @click="openAlbumModel(false)">创建相册
-          </el-button>
-          <el-button
-              type="warning" size="mini"
-              @click="openUploadModel">上传图片
-          </el-button>
         </el-header>
         <el-container>
           <!--侧边栏-->
@@ -43,9 +30,7 @@
                            :item="item" :index="index"
                            :active="albumsIndex===index"
                            @change="albumChange"
-                           @edit="openAlbumModel"
-                           @del="albumDel"
-                />
+                           :show-options="false"/>
               </ul>
             </div>
           </el-aside>
@@ -63,9 +48,6 @@
                       <div class="text small">{{ item.name }}</div>
                       <div class="btn p-2">
                         <el-button-group>
-                          <el-button
-                              icon="el-icon-view" size="mini" class="p-2"
-                              @click="previewImage(item)"></el-button>
                           <el-button
                               icon="el-icon-edit" size="mini" class="p-2"
                               @click="editImageName(item,index)"></el-button>
@@ -105,7 +87,7 @@
       </el-container>
       <span slot="footer" class="dialog-footer">
     <el-button @click="imageModel = false">取 消</el-button>
-    <el-button type="primary" @click="imageModel = false">确 定</el-button>
+    <el-button type="primary" @click="confirm">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -129,21 +111,14 @@ export default {
   data() {
     return {
       imageModel: false,
+      callback: false,
       searchFrom: {
         order: '',
         keyword: ''
       },
       albums: [],
       albumsIndex: 0,
-      albumsModel: false,
-      albumEditIndex: -1,
-      albumForm: {
-        name: '',
-        order: 0
-      },
-      uploadModel: false,
-      previewModel: false,
-      previewURL: '',
+
       imageList: [],
       //选中图片的数组
       chooseImageList: [],
@@ -178,78 +153,6 @@ export default {
     //切换相册方法
     albumChange(index) {
       this.albumsIndex = index
-    },
-    //打开相册修改/创建框
-    openAlbumModel(obj) {
-      //修改
-      if (obj) {
-        let {item, index} = obj
-        this.albumForm.name = item.name
-        this.albumForm.order = item.order
-        this.albumEditIndex = index
-        return this.albumsModel = true
-      }
-      //创建
-      this.albumForm = {
-        name: '',
-        order: 0
-      }
-      this.albumEditIndex = -1
-      this.albumsModel = true
-
-    },
-    //  点击确定修改/创建相册
-    confirmAlbumsModel() {
-      //  判断是否修改
-      if (this.albumEditIndex > -1) {
-        this.albumEdit()
-        return this.albumsModel = false
-      }
-      //  追加albums
-      this.albums.unshift({
-        name: this.albumForm.name,
-        order: this.albumForm.order,
-        num: 0
-      })
-      this.albumsModel = false
-
-    },
-    // 修改相册
-    albumEdit() {
-      this.albums[this.albumEditIndex].name = this.albumForm.name
-      this.albums[this.albumEditIndex].order = this.albumForm.order
-    },
-    //  删除相册
-    albumDel(index) {
-      this.$confirm('是否删除该相册', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.albums.splice(index, 1)
-        this.$message({
-          type: 'success',
-          message: '删除成功!',
-
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-      });
-
-
-    },
-    //  上传图片
-    openUploadModel() {
-      this.uploadModel = true
-    },
-    //  预览图片
-    previewImage(item) {
-      console.log(item)
-      this.previewURL = item.url
-      this.previewModel = true
     },
     //  修改图片名称
     editImageName(item, index) {
@@ -368,16 +271,21 @@ export default {
       console.log(`当前页: ${val}`);
     },
     //打开弹出层
-    show() {
+    showChooseImage(callback) {
+      this.callback = callback
       this.imageModel = true
     },
     //取消
     hide() {
       this.imageModel = false
+      this.callback = false
     },
     //确定
     confirm() {
       //选中的图片url
+      if (typeof this.callback === 'function') {
+        this.callback(this.chooseImageList)
+      }
       //隐藏
       this.hide()
 

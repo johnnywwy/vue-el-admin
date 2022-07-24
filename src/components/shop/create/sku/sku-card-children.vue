@@ -49,7 +49,9 @@ export default {
     },
     //选择图片
     chooseImage() {
-      this.app.show()
+      this.app.showChooseImage((res) => {
+        console.log(res)
+      })
     }
   }
 
