@@ -157,7 +157,6 @@ export default {
   components: {
     albumItem
   },
-
   data() {
     return {
       searchFrom: {
@@ -385,7 +384,7 @@ export default {
           img.isCheck = false
           img.checkOrder = 0
           //  从chooseImageList 中移出
-          this.chooseImageList.splice(i,1)
+          this.chooseImageList.splice(i, 1)
         }
       })
 
@@ -409,12 +408,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .wrapper {
   position: absolute;
   top: 55px;
   left: 0;
   right: 0;
   bottom: 0;
+
 
   > .el-container {
     > .el-aside {
