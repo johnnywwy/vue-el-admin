@@ -2,7 +2,7 @@
   <div id="app">
     <router-view></router-view>
     <el-dialog
-        title="标题"
+        title="标题" width="80%" top="5vh"
         :visible.sync="imageModel">
       <el-container class="wrapper">
         <!--头部-->
@@ -387,7 +387,126 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 @import "assets/css/common.css";
 
+.wrapper {
+  height: 70vh;
+  position: relative;
+  margin: -30px -20px;
+
+  > .el-container {
+    > .el-aside {
+      color: #333;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 60px;
+      background: #fff;
+    }
+
+    > .el-container {
+
+      > .el-main {
+        color: #333;
+        position: absolute;
+        top: 60px;
+        left: 200px;
+        right: 0;
+        bottom: 60px;
+
+        > .el-row {
+          > .el-col {
+            > .el-card {
+              cursor: pointer;
+              position: relative;
+
+              span {
+                position: absolute;
+                top: 0;
+                right: 0;
+              }
+
+              img {
+                width: 100%;
+              }
+
+              .text {
+                position: absolute;
+                color: white;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.3);
+                margin-top: -25px;
+                padding-left: 0.5em;
+              }
+
+              .btn {
+                width: 100%;
+              }
+            }
+
+          }
+        }
+
+      }
+    }
+  }
+
+  .el-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #cccccc;
+
+    > .header-wrapper {
+      display: flex;
+      align-items: center;
+      margin-right: auto;
+
+
+      > .el-select {
+        width: 180px;
+        margin-right: 1rem;
+      }
+
+      > .el-input {
+        width: 200px;
+        margin-right: 1rem;
+      }
+    }
+  }
+
+
+  .el-header,
+  .el-footer {
+    color: #333;
+  }
+
+  .el-footer {
+    //border: 1px solid red;
+
+
+    .footer-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 100%;
+      border-right: 1px solid #dee2e6;
+      flex-shrink: 0;
+
+    }
+
+    .footer-pagination {
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+      //border: 1px solid red;
+      flex: 1;
+
+
+    }
+  }
+
+}
 </style>
