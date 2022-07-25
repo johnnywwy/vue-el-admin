@@ -59,7 +59,17 @@
       </el-tab-pane>
       <el-tab-pane label="商品属性">商品属性</el-tab-pane>
       <el-tab-pane label="媒体属性">媒体属性</el-tab-pane>
-      <el-tab-pane label="商品详情">基础设置</el-tab-pane>
+      <el-tab-pane label="商品详情">
+        <!--富文本编辑器-->
+        <tinymec
+            v-model="msg"
+            ref="editor"
+            :disabled="disabled"
+            @onClick="onClick"
+        >
+
+        </tinymec>
+      </el-tab-pane>
       <el-tab-pane label="折扣设置">基础设置</el-tab-pane>
     </el-tabs>
   </div>
@@ -71,9 +81,10 @@ import baseCreate from '../../../components/shop/create/base-create'
 import singleAttrs from '../../../components/shop/create/single-attrs'
 import skuCard from '../../../components/shop/create/sku/sku-card'
 import skuTable from '../../../components/shop/create/sku-table'
+import tinymec from '../../../components/common/tinymec'
 
 export default {
-  components: {baseCreate, singleAttrs, skuCard, skuTable},
+  components: {baseCreate, singleAttrs, skuCard, skuTable, tinymec},
   data() {
     return {
       tabIndex: 0,
