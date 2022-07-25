@@ -26,9 +26,10 @@
         {{ sku.name }}
       </th>
       <td class="text-center" width="100">
-        <span class="btn btn-light border mr-2">
+       <span v-if="!item.image" class="btn btn-light border" @click="chooseImage(item)">
           <i class="el-icon-plus"></i>
         </span>
+        <img :src="item.image" v-else class="image rounded" @click="chooseImage(item)">
       </td>
       <td class="text-center" width="100">
         <input type="number" v-model="item.pprice" class="form-control text-center">
@@ -61,6 +62,7 @@ import {mapGetters, mapState} from 'vuex'
 
 export default {
   name: 'sku-table',
+  inject: ['app'],
   data() {
     return {
       list: []
@@ -81,11 +83,24 @@ export default {
   mounted() {
     // console.log(this.tableData)
     this.list = this.tableData
+  },
+  methods: {
+    //选择图片
+    chooseImage(item) {
+      this.app.showChooseImage((res) => {
+        // console.log(item)
+        item.image = res[0].url
+      }, 1)
+    }
   }
 
 };
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
+.image {
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+}
 </style>
