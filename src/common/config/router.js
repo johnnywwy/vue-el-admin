@@ -37,6 +37,10 @@ let routes = [
         component: 'shop/sku/list',
       },
       {
+        meta: {title: '商品类型管理'},
+        component: 'shop/type/list',
+      },
+      {
         meta: {title: '商品评论管理'},
         component: 'shop/comment/list',
       },
