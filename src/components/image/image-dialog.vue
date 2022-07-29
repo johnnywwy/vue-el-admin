@@ -203,15 +203,15 @@ export default {
     },
     //  选择图片
     chooseImage(item) {
-      //限制选中数量
-      if (this.chooseImageList.length >= this.max) {
-        return this.$message({
-          message: '最多选择' + this.max + '张图片',
-          type: 'warning'
-        })
-      }
       //选中
       if (!item.isCheck) {
+        //限制选中数量
+        if (this.chooseImageList.length >= this.max) {
+          return this.$message({
+            message: '最多选择' + this.max + '张图片',
+            type: 'warning'
+          })
+        }
         //加入选中序号
         this.chooseImageList.push({id: item.id, url: item.url})
         //计算选中序号
@@ -276,8 +276,9 @@ export default {
     showChooseImage(callback) {
       //取消选中图片
       this.unChoose()
-      this.callback = callback
       this.imageModel = true
+      this.callback = callback
+
     },
     //关闭弹出层
     hide() {

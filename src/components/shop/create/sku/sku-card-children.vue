@@ -2,7 +2,10 @@
   <div class="border py-2 px-2 rounded mr-2 mt-2">
     <div class="mr-2" v-if="type!==0">
       <!--颜色选择器-->
-      <el-color-picker size="mini" v-if="type===1"></el-color-picker>
+      <el-color-picker
+          size="mini" v-if="type===1"
+          :value="item.color" @change="onColorChange"
+      ></el-color-picker>
       <!--图片选择器-->
       <template v-else>
         <span v-if="!item.image" class="btn btn-light border" @click="chooseImage">
@@ -56,6 +59,10 @@ export default {
       this.app.showChooseImage((res) => {
         this.vModel('image', res[0].url)
       }, 1)
+    },
+    //监听颜色变化
+    onColorChange(e){
+      this.vModel('color', e)
     }
   }
 
@@ -68,4 +75,21 @@ export default {
   height: 45px;
   cursor: pointer;
 }
+
+div {
+  input {
+    text-align: center;
+    width: 80px;
+    font-size: 15px;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    line-height: 1;
+  }
+
+}
+
 </style>

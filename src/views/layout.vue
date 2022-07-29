@@ -234,6 +234,7 @@ export default {
       position: relative;
 
       .el-breadcrumb {
+
         background: white;
         padding: 20px;
         margin: -20px;

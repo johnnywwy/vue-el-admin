@@ -7,17 +7,22 @@ export default {
     category: [], //商品分类
     desc: '', //描述
     unit: '',//单位
-    stock: 0, //总库存
+
     min_stock: 0, //库存预警
     display_stock: 0, //库存显示 0隐藏 1显示
     status: 0, //是否上架 0仓库，1上架
     express: '', //运费模板
 
-    oprice: 0, //市场价
+    //商品大图
+    banners: [],
+
     pprice: 0, //售价
+    oprice: 0, //市场价
     cprice: 0, //成本价
+    stock: 0,//总库存
     weight: 0, //重量
     volume: 0,  //体积
+    code: 0,
 
     //规格卡片
     sku_card: [
@@ -28,11 +33,11 @@ export default {
           {
             name: '黄色',
             image: '',
-            color: ''
+            color: '',
           }, {
             name: '红色',
             image: '',
-            color: ''
+            color: '',
           }
         ]
       },
@@ -43,11 +48,11 @@ export default {
           {
             name: 'XL',
             image: '',
-            color: ''
+            color: '',
           }, {
             name: 'XXL',
             image: '',
-            color: ''
+            color: '',
           }
         ]
       }
@@ -63,7 +68,14 @@ export default {
       {name: '体积', rowspan: 2, width: '100'},
       {name: '重量', rowspan: 2, width: '100'},
       {name: '编码', rowspan: 2, width: '100'},
-    ]
+    ],
+    goods_type_id: '',//商品类型
+    //商品属性
+    goods_attrs: {
+      phone_model: ''
+    },
+    //折扣价
+    discount: 0,
 
 
   },
@@ -74,7 +86,7 @@ export default {
       })
     },
     //  获取表头
-    tableThs(state,getters) {
+    tableThs(state, getters) {
       let length = getters.skuLabels.length
       state.ths[0].colspan = length
       state.ths[0].rowspan = length > 0 ? 1 : 2
@@ -161,8 +173,11 @@ export default {
     sortSkuValue(state, {index, value}) {
       state.sku_card[index].list = value
       // console.log(JSON.stringify(state.sku_card[index]))
-    }
-
+    },
+    //修改商品属性
+    vModelGoodsAttrs(state, {key, value}) {
+      state.goods_attrs[key] = value
+    },
 
   },
   action: {}

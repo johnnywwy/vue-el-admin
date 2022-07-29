@@ -44,13 +44,13 @@
         <input type="number" v-model="item.stock" class="form-control text-center">
       </td>
       <td class="text-center" width="100">
-        <input type="number" v-model="item.weight" class="form-control text-center">
-      </td>
-      <td class="text-center" width="100">
         <input type="number" v-model="item.volume" class="form-control text-center">
       </td>
       <td class="text-center" width="100">
-        <input type="text" v-model="item.volume" class="form-control text-center">
+        <input type="number" v-model="item.weight" class="form-control text-center">
+      </td>
+      <td class="text-center" width="100">
+        <input type="text" v-model="item.code" class="form-control text-center">
       </td>
     </tr>
     </tbody>

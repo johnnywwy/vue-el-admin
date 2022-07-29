@@ -12,6 +12,7 @@
 import tinymce from 'tinymce/tinymce' //tinymce默认hidden，不引入不显示
 import Editor from '@tinymce/tinymce-vue'
 import 'tinymce/themes/silver'
+import 'tinymce/icons/default/icons.min.js'
 // 编辑器插件plugins
 // 更多插件参考：https://www.tiny.cloud/docs/plugins/
 import 'tinymce/plugins/image'// 插入上传图片插件
@@ -46,8 +47,8 @@ export default {
   data(){
     return{
       init: {
-        language_url: '/tinymce/langs/zh_Hans.js',
-        language: 'zh_Hans',
+        language_url: '/tinymce/langs/zh_CN.js',
+        language: 'zh_CN',
         skin_url: '/tinymce/skins/ui/oxide',
         // skin_url: 'tinymce/skins/ui/oxide-dark',//暗色系
         height: 500,

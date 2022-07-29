@@ -4,7 +4,9 @@
       规格项：
       <el-input size="mini" :value="item.name"
                 @input="vModel('name',index,$event)">
-        <el-button slot="append" icon="el-icon-more"></el-button>
+        <el-button
+            slot="append" icon="el-icon-more" @click="chooseSkus"
+        ></el-button>
       </el-input>
       <el-radio-group size="mini" :value="item.type" @input="vModel('type',index,$event)">
         <el-radio :label="0">无</el-radio>
@@ -54,8 +56,8 @@ import skuCardChildren from './sku-card-children'
 import {mapMutations} from 'vuex'
 
 export default {
+  inject: ['app'],
   components: {skuCardChildren},
-
   props: {
     item: Object,
     index: Number,
@@ -65,6 +67,21 @@ export default {
     return {
       list: this.item.list
     }
+  },
+  mounted() {
+    //监听结束过程
+    this.$dragging.$on('dragend', (e) => {
+      if (e.group === 'skuItem' + this.index) {
+        this.sortSkuValue({
+          index: this.index,
+          value: this.list
+        })
+      }
+    })
+    //监听list变化
+    this.$watch('item.list', (newValue) => {
+      this.list = newValue
+    })
   },
   methods: {
     ...mapMutations(
@@ -83,22 +100,23 @@ export default {
     sortCard(action, index) {
       this.sortSkuCard({action, index})
     },
+    //选择规格
+    chooseSkus() {
+      this.app.chooseSkus((res) => {
+        console.log(res)
+        this.vModel('name', this.index, res.name)
+        this.vModel('type', this.index, res.type)
+        this.vModel('list', this.index, res.list)
+        this.list = res.list
+      })
+    }
   },
-  mounted() {
-    this.$dragging.$on('dragend', (e) => {
-      if (e.group === 'skuItem' + this.index) {
-        this.sortSkuValue({
-          index: this.index,
-          value: this.list
-        })
-      }
-    })
-  }
+
 
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .addRule {
   line-height: 1.2em;
   margin-bottom: 10px;
@@ -126,10 +144,10 @@ export default {
       flex-wrap: wrap;
 
       div {
-        //border: 1px solid red;
         display: flex;
         align-items: center;
         position: relative;
+
 
         .close-btn {
           position: absolute;
@@ -138,11 +156,7 @@ export default {
           line-height: 1;
         }
 
-        input {
-          text-align: center;
-          width: 80px;
-          font-size: 15px;
-        }
+
       }
     }
   }
