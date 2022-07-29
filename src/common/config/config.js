@@ -50,7 +50,17 @@ export default {
         ]
 
       },
-      {name: '订单'},
+      {
+        name: '订单',
+        subActive: '0',
+        submenu: [
+          {
+            icon: 'el-icon-s-goods',
+            name: '发票管理',
+            pathname: 'order_invoice_list'
+          },
+        ]
+      },
       {name: '会员'},
       {name: '设置'},
     ],

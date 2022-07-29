@@ -63,7 +63,11 @@
                         alt="..." style="width: 70px;border-radius: 100%">
                   </a>
                   <div class="media-body">
-                    <h6 class="mt-0">客服1</h6>
+                    <h6 class="mt-0 d-flex">
+                      客服1
+                      <small>2021-12-12 17:15:30</small>
+                      <el-button type="danger" size="mini" class="ml-auto">删除</el-button>
+                    </h6>
                     <p>回复内容</p>
                   </div>
                 </div>
