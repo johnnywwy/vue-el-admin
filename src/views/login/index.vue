@@ -62,7 +62,6 @@ export default {
           //  存储到vuex中
           //  存储到本地
           this.$store.commit('login', res.data.data)
-          console.log(res.data)
           //  成功提示
           this.$message('登录成功')
           this.loading = false
@@ -70,7 +69,6 @@ export default {
           this.$router.push({name: 'index'})
         }).catch((err) => {
           this.loading = false
-          // this.$message()
         })
       })
     }

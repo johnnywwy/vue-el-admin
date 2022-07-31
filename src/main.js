@@ -8,10 +8,17 @@ import store from './store'
 import {Message} from 'element-ui'
 
 
+
+
 // 添加请求拦截器
 // eslint-disable-next-line no-undef
 axios.interceptors.request.use((config) => {
-  console.log(config)
+
+  //添加header头
+  let token = window.sessionStorage.getItem('token')
+  if (config.token === true) {
+    config.headers['token'] = token
+  }
   // 在发送请求之前做些什么
   return config;
 }, (error) => {
@@ -23,8 +30,6 @@ axios.interceptors.request.use((config) => {
 // 添加响应拦截器
 // eslint-disable-next-line no-undef
 axios.interceptors.response.use((response) => {
-  // 对响应数据做点什么
-  console.log('相应拦截器 成功')
   return response;
 }, (err) => {
   // 全局错误提示

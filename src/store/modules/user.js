@@ -21,7 +21,7 @@ export default {
       state.token = user.token
       //  存储到本地
       window.sessionStorage.setItem('user', JSON.stringify(state.user))
-      window.sessionStorage.setItem('token', JSON.stringify(state.token))
+      window.sessionStorage.setItem('token', state.token)
 
     },
     //退出
