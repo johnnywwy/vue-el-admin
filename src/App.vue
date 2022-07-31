@@ -25,6 +25,11 @@ export default {
       maxChooseImageValue: 9
     }
   },
+  created() {
+    //初始化用户信息
+    this.$store.commit('initUser')
+    console.log('初始化')
+  },
   methods: {
     //选择图片
     showChooseImage(callback, max = 9) {

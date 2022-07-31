@@ -5,7 +5,7 @@
         <div class="col-12 col-sm-9 col-md-7 col-lg-5 m-auto pt-5">
           <div class="card mt-5">
             <div class="card-header bg-white ">
-              <h3 class="text-center mb-0 text-secondary">{{$conf.logo}}</h3>
+              <h3 class="text-center mb-0 text-secondary">{{ $conf.logo }}</h3>
             </div>
             <div class="card-body">
               <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-ruleForm">
@@ -16,7 +16,9 @@
                   <el-input v-model="form.password" size="medium" placeholder="请输入密码" type="password"></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" size="medium" class="w-100" @click="submit">立即登录</el-button>
+                  <el-button type="primary" size="medium" class="w-100" @click="submit" :loading="false">
+                    {{ loading ? '登录中...' : '立即登录' }}
+                  </el-button>
                 </el-form-item>
               </el-form>
             </div>
@@ -32,9 +34,10 @@ export default {
   name: 'index',
   data() {
     return {
+      loading: false,
       form: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: 'admin',
       },
       rules: {
         username: [
@@ -43,7 +46,7 @@ export default {
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'},
-          {min: 10, max: 30, message: '长度在 10 到 30 个字符', trigger: 'blur'}
+          {min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur'}
         ],
       }
     }
@@ -51,8 +54,24 @@ export default {
   methods: {
     submit() {
       this.$refs.ruleForm.validate((e) => {
-        if (!e) return
-        this.$router.push({name: 'index'})
+        if (!e) return;
+        //提交表单
+        this.loading = true
+        this.axios.post('/admin/login', this.form
+        ).then(res => {
+          //  存储到vuex中
+          //  存储到本地
+          this.$store.commit('login', res.data.data)
+          console.log(res.data)
+          //  成功提示
+          this.$message('登录成功')
+          this.loading = false
+          //  跳转页面
+          this.$router.push({name: 'index'})
+        }).catch((err) => {
+          this.loading = false
+          // this.$message()
+        })
       })
     }
   }
@@ -60,7 +79,5 @@ export default {
 </script>
 
 <style>
-.lalala {
-  /*border: 1px solid red;*/
-}
+
 </style>
