@@ -188,7 +188,8 @@ export default {
         // headers: {
         //   token: this.user.token
         // }
-        token: true
+        token: true,
+        loading: true
       }).then(res => {
         this.$message('退出成功')
         this.$store.commit('logout')
