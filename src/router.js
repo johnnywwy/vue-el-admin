@@ -5,11 +5,6 @@ import routes from './common/config/router'
 Vue.use(Router)
 
 
-// const RouterPush = Router.prototype.push
-// Router.prototype.push = function push(to) {
-//   return RouterPush.call(this, to).catch(err => err)
-// }
-
 const router = new Router({routes})
 
 
@@ -18,13 +13,24 @@ router.beforeEach((to, from, next) => {
 
   let token = window.sessionStorage.getItem('token')
   if (token) {//  已登录
-
     //防止重复登录
     if (to.path === '/login') {
       Vue.prototype.$message.error('请勿重复登录')
       return next({name: from.name ? from.name : 'index'})
     }
-    //非重复登录，放行
+    //其他验证...
+    let rules = window.sessionStorage.getItem('rules')
+    rules = rules ? JSON.parse(rules) : []
+
+    let index = rules.findIndex(item => {
+      console.log('item', item)
+      return item.rule_id > 0 && item.desc === to.name
+    })
+    if (index === -1) {
+      return next({name: from.name ? from.name : 'index'})
+    }
+
+
     next()
   } else {
     //跳过登录页验证

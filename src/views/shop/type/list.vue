@@ -260,16 +260,14 @@ export default {
           type: 0,
           value: ''
         }
+        this.value_list = []
         this.editIndex = -1
       } else {
         //  修改
         this.form = {
-          name: e.row.name,
-          order: e.row.order,
-          status: e.row.status,
-          type: e.row.type,
-          value: e.row.value.replace(/、/g, '\n')
+          ...e.row
         }
+        this.value_list = [...e.row.value_list]
         this.editIndex = e.$index
 
       }
@@ -357,24 +355,28 @@ export default {
           });
         }
         if (res) {
-          let value_list = this.value_list.map(item=>{
-            if(item.default){
-              item.default = item.default.replace(/\n/g,',')
-            }
-            return item
-          })
-          let data = {
-            ...this.form,
-            skus_id:this.skus_id,
-            value_list:[...value_list]
+          let msg = '添加'
+          if (this.editIndex === -1) {
+            this.tableData.unshift({
+              ...this.form,
+              value_list: [...this.value_list]
+            })
+          } else {
+            let item = this.tableData[this.editIndex]
+            item.name = this.form.name
+            item.sku_list = this.form.value
+            item.status = this.form.status
+            item.type = this.form.type
+            item.order = this.form.order
+            item.value_list = this.value_list
+            msg = '修改'
           }
-          let id = 0
-          if (this.editIndex !== -1) {
-            id = this.tableData[this.editIndex].id
-          }
-          // 关闭模态框
-          this.addOrEdit(data,id)
+          //  关闭模态框
           this.createModel = false
+          this.$message({
+            message: msg + '成功',
+            type: 'success'
+          })
         }
       })
 

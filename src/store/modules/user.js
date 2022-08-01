@@ -32,8 +32,6 @@ export default {
       state.token = false
       window.sessionStorage.clear()
       //  跳转页面
-
-
     }
   },
   action: {}

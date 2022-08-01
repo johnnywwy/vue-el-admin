@@ -82,13 +82,10 @@ export default {
   mixins: [common],
   data() {
     return {
-      navBar: [],
-      bran: []
+      bran: [],
     };
   },
   created() {
-    //初始化菜单
-    this.navBar = this.$conf.navBar
     //获取面包屑导航
     this.getRouterBran()
     //初始化选中菜单
@@ -97,19 +94,25 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.user.user
+      user: state => state.user.user,
+      navBar: state => state.menu.navBar
 
     }),
     slideMenuActive: {
       get() {
-        return this.navBar.list[this.navBar.active].subActive || '0'
+        let item = this.navBar.list[this.navBar.active]
+        return item ? item.subActive : '0'
       },
       set(val) {
-        this.navBar.list[this.navBar.active].subActive = val
+        let item = this.navBar.list[this.navBar.active]
+        if (item) {
+          item.subActive = val
+        }
       }
     },
     slideMenus() {
-      return this.navBar.list[this.navBar.active].submenu || []
+      let item = this.navBar.list[this.navBar.active]
+      return item ? item.submenu : []
     }
   },
   watch: {

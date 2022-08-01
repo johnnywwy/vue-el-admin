@@ -12,7 +12,6 @@ let requestCount = 0
 
 //显示loading
 function showLoading() {
-
   if (requestCount === 0) {
     loading = Message({
       message: '加载中...',
@@ -42,15 +41,14 @@ axios.interceptors.request.use((config) => {
     config.headers['token'] = token
   }
 
- //显示loading
+  //显示loading
   if (config.loading === true) {
     showLoading()
   }
-  showLoading()
   // 在发送请求之前做些什么
+  // hideLoading()
   return config;
 }, (error) => {
-
   //隐藏Loading
   hideLoading()
   // 对请求错误做些什么
