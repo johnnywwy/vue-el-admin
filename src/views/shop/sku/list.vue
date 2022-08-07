@@ -100,27 +100,21 @@
 
 <script>
 import buttonSearch from '../../../components/common/button-search'
+import common from '../../../common/mixins/common'
 
 export default {
   inject: ['layout'],
+  mixins: [common],
   components: {
     buttonSearch
   },
   name: 'list',
   data() {
     return {
-      page: {
-        current: 1,
-        sizes: [10, 20, 50, 100],
-        size: 10,
-        total: 0
-      },
+      preURL: 'skus',
       //商品列表
       tableData: [],
-      //多选
-      multipleSelection: [],
-      //当前分页
-      currentPage: 1,
+
       //控制是否新建规格
       createModel: false,
       editIndex: -1,
@@ -145,35 +139,15 @@ export default {
   created() {
     this.getList()
   },
-  computed: {
-    //选中的id的组成数组
-    ids() {
-      return this.multipleSelection.map(item => {
-        return item.id
-      })
-    }
-  },
+
   methods: {
-
-    //请求列表
-    getList() {
-      this.layout.showLoading()
-      let url = `/admin/skus/${this.page.current}?limit=${this.page.size}`
-      // console.log(url)
-      this.axios.get(url, {
-        token: true
-      }).then(res => {
-        // console.log(res)
-        let data = res.data.data
-        // console.log(data)
-        this.tableData = data.list
-        this.page.total = data.totalCount
-        this.layout.hideLoading()
-      }).catch(err => {
-        this.layout.hideLoading()
-      })
-
+    //获取列表
+    getListResult(e) {
+      this.tableData = e
     },
+    //重写url
+    // getListURL() {
+    // },
     //打开模态框
     openModel(e = false) {
       //增加
@@ -204,130 +178,20 @@ export default {
       // 打开dialog
       this.createModel = true
     },
-    //启用禁用
-    changeStatus(item) {
-      //请求服务端修改状态
-      let status = item.status === 1 ? 0 : 1
-      let msg = status === 1 ? '启用' : '禁用'
-      this.layout.showLoading()
-      this.axios.post('/admin/skus/' + item.id + '/update_status', {
-        status: status
-      }, {
-        token: true
-      }).then(res => {
-        item.status = status
-
-        this.layout.hideLoading()
 
 
-      }).catch(err => {
-        this.layout.hideLoading()
-
-      })
-
-    },
-    //选中
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-      // console.log(this.multipleSelection)
-      console.log(this.ids)
-    },
-    //批量删除
-    deleteAll() {
-      this.$confirm('是否删除选中规格?', '提示', {
-        confirmButtonText: '删除',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.layout.showLoading()
-        this.axios.post('/admin/skus/delete_all', {
-          ids: this.ids
-        }, {
-          token: true
-        }).then(res => {
-          this.multipleSelection = []
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-
-          this.getList()
-          this.layout.hideLoading()
-        }).catch(err => {
-          this.layout.hideLoading()
-        })
-      })
-
-    },
-    //删除当前商品
-    deleteItem(item) {
-      this.$confirm('是否删除该规格?', '提示', {
-        confirmButtonText: '删除',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.layout.showLoading()
-        this.axios.post('/admin/skus/' + item.id + '/delete', {}, {
-          token: true
-        }).then(res => {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-          this.getList()
-          this.layout.hideLoading()
-        }).catch(err => {
-          this.layout.hideLoading()
-        })
-
-      })
-    },
     //添加规格
     submit() {
       this.$refs.form.validate(res => {
         if (res) {
-          let msg = '添加'
-          if (this.editIndex === -1) {
-            //添加
-            this.layout.showLoading()
-            this.axios.post('/admin/skus', this.form, {
-              token: true
-            }).then(res => {
-              this.$message({
-                message: msg + '成功',
-                type: 'success'
-              })
-              this.getList()
-
-              this.layout.hideLoading()
-            }).catch(err => {
-              this.layout.hideLoading()
-
-            })
-            this.form.default = this.form.default.replace(/\n/g, ',')
-            // this.form.default = this.form.default.trim()
-            // this.form.name = this.form.name.trim()
-            // this.tableData.unshift(this.form)
-          } else {
-            msg = '修改'
-            let item = this.tableData[this.editIndex]
-            this.form.default = this.form.default.replace(/\n/g, ',')
-            this.axios.post('/admin/skus/' + item.id, this.form, {
-              token: true
-            }).then(res => {
-              this.$message({
-                message: msg + '成功',
-                type: 'success'
-              })
-              this.getList()
-              this.layout.hideLoading()
-            }).catch(err => {
-              this.layout.hideLoading()
-            })
-
+          this.form.default = this.form.default.replace(/\n/g, ',')
+          let id = 0
+          if (this.editIndex !== -1) {
+            id = this.tableData[this.editIndex].id
           }
+          this.addOrEdit(this.form, id)
+          //关闭模态框
           this.createModel = false
-
 
         }
 
@@ -335,16 +199,7 @@ export default {
 
 
     },
-    handleSizeChange(val) {
-      this.page.size = val
-      // console.log(`每页 ${val} 条`);
-      this.getList()
-    },
 
-    handleCurrentChange(val) {
-      this.page.current = val
-      this.getList()
-    }
   }
 
 };
