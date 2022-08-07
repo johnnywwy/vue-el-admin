@@ -64,7 +64,7 @@ export default {
       console.log('addOrEdit')
       this.layout.showLoading()
       let msg = id > 0 ? '修改' : '增加'
-      let url = id > 0 ? '/admin/skus' + id : '/admin/skus'
+      let url = id > 0 ? '/admin/' + this.preURL + '/' + id : '/admin/skus'
       this.axios.post(url, this.form, {
         token: true
       }).then(res => {
@@ -87,7 +87,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.layout.showLoading()
-        this.axios.post('/admin/skus/delete_all', {
+        this.axios.post('/admin/'+this.preURL +'/delete_all', {
           ids: this.ids
         }, {
           token: true
@@ -114,7 +114,7 @@ export default {
       let status = item.status === 1 ? 0 : 1
       let msg = status === 1 ? '启用' : '禁用'
 
-      this.axios.post('/admin/skus/' + item.id + '/update_status', {
+      this.axios.post('/admin/'+this.preURL +'/' + item.id + '/update_status', {
         status: status
       }, {
         token: true
@@ -140,7 +140,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.layout.showLoading()
-        this.axios.post('/admin/skus/' + item.id + '/delete', {}, {
+        this.axios.post('/admin/'+this.preURL +'/' + item.id + '/delete', {}, {
           token: true
         }).then(res => {
           this.$message({

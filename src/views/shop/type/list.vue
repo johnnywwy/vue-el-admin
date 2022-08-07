@@ -9,9 +9,12 @@
     </button-search>
     <!--商品列表-->
     <el-table border :data="tableData" style="width: 100%"
-              class="table-wrapper" @selection-change="handleSelectionChange">
+              class="table-wrapper"
+              @selection-change="handleSelectionChange">
       <!--多选-->
-      <el-table-column type="selection" width=45 align="center"></el-table-column>
+      <el-table-column type="selection" width=45 align="center">
+
+      </el-table-column>
       <!--表头-->
       <el-table-column prop="name" label="类型名称" align="center">
       </el-table-column>
@@ -36,7 +39,7 @@
           <el-button-group>
             <el-button type="success" size="mini" plain @click="openModel(scope)">修改</el-button>
             <el-button type="danger" size="mini" plain
-                       @click="deleteItem(scope)">删除
+                       @click="deleteItem(scope.row)">删除
             </el-button>
           </el-button-group>
         </template>
@@ -47,11 +50,13 @@
     <el-footer class="d-flex align-items-center px-0 border-top">
       <div class="footer-pagination">
         <el-pagination
-            :current-page="currentPage"
-            :page-sizes="[20, 50, 100, 200]"
-            :page-size="50"
+            :current-page="page.current"
+            :page-sizes="page.sizes"
+            :page-size="page.size"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :total="page.total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </el-footer>
@@ -86,7 +91,7 @@
               <i class="el-icon-delete" style=""></i>
             </span>
             <el-button size="mini">
-              <i class="el-icon-plus" style=""></i>
+              <i class="el-icon-plus" style="">123456</i>
             </el-button>
           </div>
         </el-form-item>
@@ -177,37 +182,44 @@
 
 <script>
 import buttonSearch from '../../../components/common/button-search'
+import common from '../../../common/mixins/common'
 
 export default {
+  mixins: [common],
+  inject: ['layout'],
   components: {
     buttonSearch
   },
   name: 'list',
   data() {
     return {
+      preURL: 'goods_type',
+
+
+      tableData: [],
       //商品列表
-      tableData: [{
-        id: 1,
-        name: '鞋子',
-        order: 50,
-        status: 1,
-        sku_list: [
-          {id: 1, name: '颜色'},
-          {id: 2, name: '尺寸'}
-        ],
-        value_list: [{
-          order: 50,
-          name: '特性',
-          type: 'input',
-          value: '',
-          isEdit: false
-        }, {
-          order: 50,
-          name: '前置摄像机',
-          type: 'input',
-          value: ''
-        }]
-      }],
+      // tableData: [{
+      //   id: 1,
+      //   name: '鞋子',
+      //   order: 50,
+      //   status: 1,
+      //   sku_list: [
+      //     {id: 1, name: '颜色'},
+      //     {id: 2, name: '尺寸'}
+      //   ],
+      //   value_list: [{
+      //     order: 50,
+      //     name: '特性',
+      //     type: 'input',
+      //     value: '',
+      //     isEdit: false
+      //   }, {
+      //     order: 50,
+      //     name: '前置摄像机',
+      //     type: 'input',
+      //     value: ''
+      //   }]
+      // }],
       //多选
       multipleSelection: [],
       //当前分页
@@ -244,10 +256,18 @@ export default {
     formatValue(value) {
       // ['特性','前置摄像机']
       let arr = value.map(v => v.name)
-      return arr.join('、')
+      return arr.join(',')
     }
   },
   methods: {
+    getListResult(e) {
+      this.tableData = e.list.map(item => {
+        item.value_list = item.goods_type_values
+        return item
+      })
+      console.log(this.tableData)
+    },
+
     //打开模态框
     openModel(e = false) {
       //增加
@@ -275,51 +295,7 @@ export default {
       // 打开dialog
       this.createModel = true
     },
-    //启用禁用
-    changeStatus(item) {
-      //请求服务端修改状态
-      item.status = !item.status
-      this.$message({
-        message: item.status ? '启用' : '禁用',
-        type: 'success'
-      })
-    },
-    //选中
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    //批量删除
-    deleteAll() {
-      this.$confirm('是否删除选中规格?', '提示', {
-        confirmButtonText: '删除',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.multipleSelection.forEach(item => {
-          let index = this.tableData.findIndex(v => v.id === item.id)
-          if (index !== -1) {
-            this.tableData.splice(index, 1)
-          }
-        })
-        this.multipleSelection = []
 
-      })
-
-    },
-    //删除当前商品
-    deleteItem(scope) {
-      this.$confirm('是否删除该规格?', '提示', {
-        confirmButtonText: '删除',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          message: '删除成功',
-          type: 'success'
-        })
-        this.tableData.splice(scope.$index, 1)
-      })
-    },
     //添加规格
     submit() {
       this.$refs.form.validate(res => {
