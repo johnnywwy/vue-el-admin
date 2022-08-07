@@ -50,7 +50,7 @@
           </el-row>
         </el-aside>
         <!--主内容布局-->
-        <el-main>
+        <el-main v-loading="loading">
           <!--面包屑导航-->
           <div v-if="bran.length > 0">
             <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -80,9 +80,15 @@ import {mapState} from 'vuex'
 
 export default {
   mixins: [common],
+  provide() {
+    return {
+      layout: this
+    }
+  },
   data() {
     return {
       bran: [],
+      loading: false
     };
   },
   created() {
@@ -127,6 +133,15 @@ export default {
     }
   },
   methods: {
+    //显示loading
+    showLoading() {
+      this.loading = true
+    },
+    //隐藏loading
+    hideLoading() {
+      this.loading = false
+    },
+
     //获取面包屑导航
     getRouterBran() {
       let hasName = this.$route.matched.filter(value => value.name)

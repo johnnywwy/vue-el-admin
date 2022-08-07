@@ -67,8 +67,36 @@ export default {
           },
         ]
       },
-      {name: '会员'},
-      {name: '设置'},
+      {
+        name: '会员',
+
+      },
+      {
+        name: '设置',
+        subActive: '0',
+        submenu: [
+          {
+            icon: 'el-icon-s-claim',
+            name: '基础设置',
+            pathname: 'set_base'
+          },
+          {
+            icon: 'el-icon-s-claim',
+            name: '物流设置',
+            pathname: 'set_express'
+          },
+          {
+            icon: 'el-icon-s-claim',
+            name: '管理员管理',
+            pathname: 'set_manager'
+          },
+          {
+            icon: 'el-icon-s-claim',
+            name: '交易设置',
+            pathname: 'set_payment'
+          }
+        ]
+      },
     ],
 
   }

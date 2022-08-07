@@ -86,6 +86,24 @@ import $conf from './common/config/config'
 
 Vue.prototype.$conf = $conf
 
+
+//引入自定义指令
+Vue.directive('auth', {
+  inserted(el, binding) {
+    let user = window.sessionStorage.getItem('user')
+    user = user ? JSON.parse(user) : {}
+    if (!user.super) {
+      let rules = user.ruleNames ? user.ruleNames : []
+      let v = rules.find(item => item === binding.value)
+      if (!v) {
+        el.parentNode.removeChild(el)
+      }
+    }
+
+  },
+})
+
+
 Vue.config.productionTip = false
 
 new Vue({

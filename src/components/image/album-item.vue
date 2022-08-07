@@ -5,11 +5,11 @@
     {{ item.name }}
 
     <span class="btn btn-light btn-sm ml-auto" v-if="!showOptions">
-        {{ item.num }}
+        {{ item.images_count }}
     </span>
     <el-dropdown v-else>
       <span class="btn btn-light btn-sm">
-        {{ item.num }}
+        {{ item.images_count }}
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">

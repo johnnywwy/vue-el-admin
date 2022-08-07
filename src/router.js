@@ -23,7 +23,7 @@ router.beforeEach((to, from, next) => {
     rules = rules ? JSON.parse(rules) : []
 
     let index = rules.findIndex(item => {
-      console.log('item', item)
+      // console.log('item', item)
       return item.rule_id > 0 && item.desc === to.name
     })
     if (index === -1) {

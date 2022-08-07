@@ -47,6 +47,22 @@ let routes = [
       {
         meta: {title: '发票管理'},
         component: 'order/invoice/list',
+      },
+      {
+        meta: {title: '基础设置'},
+        component: 'set/base/index',
+      },
+      {
+        meta: {title: '物流设置'},
+        component: 'set/express/index',
+      },
+      {
+        meta: {title: '管理员管理'},
+        component: 'set/manager/index',
+      },
+      {
+        meta: {title: '交易设置'},
+        component: 'set/payment/index',
       }
     ]
   },
