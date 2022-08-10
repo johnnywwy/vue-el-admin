@@ -50,7 +50,7 @@ router.beforeEach((to, from, next) => {
       return next()
     }
     //  未登录
-    Vue.prototype.$message.error('请先登录')
+    // Vue.prototype.$message.error('请先登录')
     next({path: '/login'})
   }
 

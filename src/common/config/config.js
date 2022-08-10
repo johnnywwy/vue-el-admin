@@ -62,13 +62,33 @@ export default {
         submenu: [
           {
             icon: 'el-icon-s-goods',
+            name: '订单管理',
+            pathname: 'order_order_list'
+          },
+          {
+            icon: 'el-icon-s-goods',
             name: '发票管理',
             pathname: 'order_invoice_list'
           },
+          {
+            icon: 'el-icon-s-goods',
+            name: '售后服务',
+            pathname: 'order_after_sale_list'
+          },
+
         ]
       },
       {
         name: '会员',
+        subActive: '0',
+        submenu: [
+          {
+            icon: 'el-icon-s-claim',
+            name: '会员列表',
+            pathname: 'user_user-list_list'
+          }
+
+        ]
 
       },
       {

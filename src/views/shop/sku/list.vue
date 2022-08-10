@@ -183,6 +183,7 @@ export default {
     //添加规格
     submit() {
       this.$refs.form.validate(res => {
+        console.log('123')
         if (res) {
           this.form.default = this.form.default.replace(/\n/g, ',')
           let id = 0
@@ -192,9 +193,7 @@ export default {
           this.addOrEdit(this.form, id)
           //关闭模态框
           this.createModel = false
-
         }
-
       })
 
 

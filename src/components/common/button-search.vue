@@ -12,7 +12,7 @@
           <el-button type="info" size="mini"
                      @click="$emit('search',keyword)">搜索
           </el-button>
-          <el-button size="mini"
+          <el-button size="mini" v-if="showSuperSearch"
                      @click="superSearch=true">高级搜索
           </el-button>
         </slot>
@@ -22,8 +22,10 @@
              v-show="superSearch">
       <div slot="header" class="clearfix header">
         <span>高级搜索</span>
-        <el-button style="float: right; padding: 3px 0" type="text"
-                   @click="closeSuperSearch">收起
+        <el-button
+            style="float: right; padding: 3px 0"
+            type="text"
+            @click="closeSuperSearch">收起
         </el-button>
       </div>
       <!--表单-->
@@ -41,6 +43,10 @@ export default {
       default: ''
     },
     showSearch: {
+      type: Boolean,
+      default: true
+    },
+    showSuperSearch:{
       type: Boolean,
       default: true
     }

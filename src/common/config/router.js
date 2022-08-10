@@ -44,10 +44,20 @@ let routes = [
         meta: {title: '商品评论管理'},
         component: 'shop/comment/list',
       },
+      //订单页面
       {
         meta: {title: '发票管理'},
         component: 'order/invoice/list',
       },
+      {
+        meta: {title: '售后服务'},
+        component: 'order/after-sale/list',
+      },
+      {
+        meta: {title: '订单列表'},
+        component: 'order/order/list',
+      },
+      //设置页面
       {
         meta: {title: '基础设置'},
         component: 'set/base/index',
@@ -63,7 +73,17 @@ let routes = [
       {
         meta: {title: '交易设置'},
         component: 'set/payment/index',
-      }
+      },
+      //  会员页面
+      {
+        meta: {title: '会员列表'},
+        component: 'user/user-list/list',
+      },
+      // {
+      //   meta: {title: '物流设置'},
+      //   component: 'set/express/index',
+      // },
+
     ]
   },
   {

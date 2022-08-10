@@ -17,6 +17,8 @@ export default {
       currentPage: 1,
       //多选
       multipleSelection: [],
+      //判断等待状态
+      loading: true
     }
   },
   computed: {
@@ -31,6 +33,17 @@ export default {
     this.getList()
   },
   methods: {
+    showLoading() {
+      if (this.loading) {
+        this.layout.showLoading()
+      }
+    },
+    hideLoading() {
+      if (this.loading) {
+        this.layout.hideLoading()
+      }
+    },
+
     //处理列表结果方法
     getListResult(data) {
     },
@@ -41,7 +54,7 @@ export default {
     //获取列表
     getList() {
       if (this.preURL === '') return
-      this.layout.showLoading()
+
       let url = this.getListURL()
       this.axios.get(url, {
         token: true
@@ -52,20 +65,19 @@ export default {
         //往外暴露列表结果
         this.getListResult(data)
         this.tableData = data.list
-        this.layout.hideLoading()
+        this.hideLoading()
       }).catch(err => {
-        this.layout.hideLoading()
+        this.hideLoading()
       })
 
     },
 
     //添加或者编辑
     addOrEdit(data, id = 0) {
-      console.log('addOrEdit')
-      this.layout.showLoading()
+      this.showLoading()
       let msg = id > 0 ? '修改' : '增加'
-      let url = id > 0 ? '/admin/' + this.preURL + '/' + id : '/admin/skus'
-      this.axios.post(url, this.form, {
+      let url = id > 0 ? '/admin/' + this.preURL + '/' + id : '/admin/' + this.preURL
+      this.axios.post(url, data, {
         token: true
       }).then(res => {
         this.$message({
@@ -73,9 +85,9 @@ export default {
           type: 'success'
         })
         this.getList()
-        this.layout.hideLoading()
+        this.hideLoading()
       }).catch(err => {
-        this.layout.hideLoading()
+        this.hideLoading()
       })
     },
 
@@ -86,8 +98,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.layout.showLoading()
-        this.axios.post('/admin/'+this.preURL +'/delete_all', {
+        this.showLoading()
+        this.axios.post('/admin/' + this.preURL + '/delete_all', {
           ids: this.ids
         }, {
           token: true
@@ -99,9 +111,9 @@ export default {
           })
 
           this.getList()
-          this.layout.hideLoading()
+          this.hideLoading()
         }).catch(err => {
-          this.layout.hideLoading()
+          this.hideLoading()
         })
       })
 
@@ -110,11 +122,11 @@ export default {
     //修改状态
     changeStatus(item) {
       //请求服务端修改状态
-      this.layout.showLoading()
+      this.showLoading()
       let status = item.status === 1 ? 0 : 1
       let msg = status === 1 ? '启用' : '禁用'
 
-      this.axios.post('/admin/'+this.preURL +'/' + item.id + '/update_status', {
+      this.axios.post('/admin/' + this.preURL + '/' + item.id + '/update_status', {
         status: status
       }, {
         token: true
@@ -124,9 +136,9 @@ export default {
           message: msg + '成功',
           type: 'success'
         })
-        this.layout.hideLoading()
+        this.hideLoading()
       }).catch(err => {
-        this.layout.hideLoading()
+        this.hideLoading()
 
       })
 
@@ -139,8 +151,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.layout.showLoading()
-        this.axios.post('/admin/'+this.preURL +'/' + item.id + '/delete', {}, {
+        this.showLoading()
+        this.axios.post('/admin/' + this.preURL + '/' + item.id + '/delete', {}, {
           token: true
         }).then(res => {
           this.$message({
@@ -148,9 +160,9 @@ export default {
             type: 'success'
           })
           this.getList()
-          this.layout.hideLoading()
+          this.hideLoading()
         }).catch(err => {
-          this.layout.hideLoading()
+          this.hideLoading()
         })
 
       })

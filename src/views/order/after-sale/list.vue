@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white px-3" style="margin: -25px;margin-top: -15px;margin-bottom: 0!important;">
+  <div class="bg-white px-3" style="margin: -20px;margin-top: -15px;margin-bottom: 0!important;">
     <button-search class="pt-3">
       <template #right>
         <div class="d-flex align-items-center">
@@ -29,38 +29,38 @@
       </el-table-column>
 
       <el-table-column
-          label="订单编号"
+          label="商品信息"
           prop="name">
       </el-table-column>
 
       <el-table-column
           align="center"
           prop="username"
-          label="用户名">
+          label="商品清单">
       </el-table-column>
 
       <el-table-column
           align="center"
           prop="price"
-          label="开票金额">
+          label="订单金额">
       </el-table-column>
 
       <el-table-column
           align="center"
           prop="price"
-          label="抬头">
+          label="收货信息">
       </el-table-column>
 
       <el-table-column
           align="center"
           prop="content"
-          label="发票内容">
+          label="买家">
       </el-table-column>
 
       <el-table-column
           align="center"
           prop="code"
-          label="纳税人识别号">
+          label="交易状态">
       </el-table-column>
 
       <el-table-column
@@ -144,7 +144,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .sku-list-item > i {
   display: none;
   cursor: pointer;
@@ -161,7 +161,10 @@ export default {
 .sku-list-item:hover > i {
   display: inline-block;
 }
+
 .el-date-editor ::v-deep .el-range-separator {
   padding: 0 !important;
 }
+
+
 </style>

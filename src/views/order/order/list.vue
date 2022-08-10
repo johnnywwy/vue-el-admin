@@ -5,36 +5,40 @@
              @tab-click="handleClick">
       <el-tab-pane :label="tab.name" :key="tabIndex"
                    v-for="(tab,tabIndex) in tabBars">
-        <button-search placeholder="要搜索的商品名称" ref="buttonSearch" @search="search">
+        <button-search placeholder="要搜索的订单编号" ref="buttonSearch" @search="search">
           <template #left>
             <!--左边按钮-->
-            <router-link :to="{name:'shop_goods_create'}" class="mr-2">
-              <el-button type="success" size="mini">发布商品</el-button>
-
-            </router-link>
+            <el-button type="success" size="mini">导出数据</el-button>
             <el-button type="danger" size="mini">批量删除</el-button>
-            <el-button type="warning" size="mini">恢复商品</el-button>
-            <el-button size="mini">上架</el-button>
-            <el-button size="mini">下架</el-button>
-            <el-button size="mini">推荐</el-button>
           </template>
           <!--高级搜索表单-->
           <template #form>
             <el-form :inline="true" :model="form" class="demo-form-inline">
-              <el-form-item label="商品名称" class="mb-0">
-                <el-input v-model="form.name" placeholder="请输入商品名称" size="mini"></el-input>
+              <el-form-item label="订单编号" class="mb-0">
+                <el-input v-model="form.code" placeholder="请输入订单编号" size="mini"></el-input>
               </el-form-item>
-              <el-form-item label="商品编码" class="mb-0">
-                <el-input v-model="form.code" placeholder="请输入商品编码" size="mini"></el-input>
-              </el-form-item>
-              <el-form-item label="商品类型" class="mb-0">
-                <el-select v-model="form.type" placeholder="活动区域" size="mini">
+              <el-form-item label="订单状态" class="mb-0">
+                <el-select v-model="form.type" placeholder="订单状态" size="mini">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="商品分类" class="mb-0">
-                <el-input v-model="form.category" placeholder="请输入商品分类" size="mini">
+              <el-form-item label="下单时间" class="mb-0">
+                <el-date-picker size="mini"
+                                v-model="form.time"
+                                type="daterange"
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期">
+                </el-date-picker>
+              </el-form-item>
+
+              <el-form-item label="收货人" class="mb-0">
+                <el-input v-model="form.username" placeholder="请输入收货人" size="mini">
+                </el-input>
+              </el-form-item>
+              <el-form-item label="手机号" class="mb-0">
+                <el-input v-model="form.phone" placeholder="请输入手机号" size="mini">
                 </el-input>
               </el-form-item>
               <el-form-item class="mb-0">
@@ -50,45 +54,72 @@
           <!--多选-->
           <el-table-column type="selection" width=45 align="center"></el-table-column>
           <!--表头-->
-          <el-table-column prop="title" label="商品" width="380">
+          <el-table-column prop="title" label="商品" width="300">
             <template slot-scope="scope">
+              <div class="d-flex">
+                <div style="flex: 1;">
+                  <p class="mb-1">订单编号：</p>
+                  <p>
+                    <small>202208098545157</small>
+                  </p>
+                </div>
+                <div style="flex: 1;">
+                  <p>下单时间：</p>
+                  <p>
+                    <small>202208098545157</small>
+                  </p>
+                </div>
+              </div>
               <div class="media commodity">
-                <img :src="scope.row.cover" class="mr-3" height="60px" alt="">
+                <img :src="scope.row.cover" class="mr-3" height="60" alt="">
                 <div class="media-body">
-                  <h6>{{ scope.row.title }}</h6>
-                  <p>分类：{{ scope.row.category }}</p>
-                  <p>时间：{{ scope.row.create_time }}</p>
+                  <a class="text-primary" style="font-weight:bold;">{{ scope.row.title }}</a>
                 </div>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="商品类型" align="center">
-          </el-table-column>
-          <el-table-column prop="sale_count" label="实际销量" align="center">
-          </el-table-column>
-          <el-table-column label="商品排序" align="center" prop="order"></el-table-column>
-          <el-table-column prop="status" label="商品状态" align="center">
+          <el-table-column prop="type" label="实付款" align="center" width="120">
             <template slot-scope="scope">
-              <el-button type="success" size="mini"
-                         plain @click="scope.row.isCheck=1">审核通过
-              </el-button>
-              <el-button type="danger" size="mini" class="ml-0 mt-1"
-                         plain @click="scope.row.isCheck=2">审核拒绝
-              </el-button>
+              <span>￥20</span>
+              <p>
+                <small>(含运费：￥0.00)</small>
+              </p>
             </template>
           </el-table-column>
-          <el-table-column prop="stock" label="总库存" align="center">
+          <el-table-column prop="sale_count" label="买家" align="center" width="120">
+            <template slot-scope="scope">
+              <span>用户名</span>
+              <p>
+                <small>(用户id：11)</small>
+              </p>
+            </template>
           </el-table-column>
-          <el-table-column prop="price" label="价格" align="center"></el-table-column>
+          <el-table-column prop="status" label="支付方式" align="center">
+            <template slot-scope="scope">
+              <span class="badge badge-success">微信支付</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="配送方式" align="center" prop="order">
+            <template slot-scope="scope">
+              <span>顺丰快递</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="stock" label="交易状态" align="center" width="200px">
+            <template slot-scope="scope">
+              <div>付款状态：
+                <span class="badge badge-success">已付款</span>
+              </div>
+              <div>发货状态：
+                <span class="badge badge-success">代发货</span>
+              </div>
+              <div>收货状态：
+                <span class="badge badge-success">待收货</span>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center" width="150">
             <template slot-scope="scope">
-              <el-button-group>
-                <el-button type="success" size="mini" plain>编辑</el-button>
-                <el-button
-                    type="danger" size="mini"
-                    plain @click="deleteItem(scope.$index)">删除
-                </el-button>
-              </el-button-group>
+              <el-button type="primary" size="mini" plain>订单详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -122,17 +153,21 @@ export default {
     return {
       tabIndex: 0,
       tabBars: [
-        {name: '审核中'},
-        {name: '出售中'},
-        {name: '已下架'},
-        {name: '库存预警'},
-        {name: '回收站'},
-      ],
+        {name: '全部'},
+        {name: '代付款'},
+        {name: '待发货'},
+        {name: '已发货'},
+        {name: '已收货'},
+        {name: '已完成'},
+        {name: '已关闭'},
+        {name: '退款中'},
+        1],
       form: {
-        name: '',
         code: '',
         type: '',
-        category: ''
+        time: '',
+        username: '',
+        phone: ''
       },
       //商品列表
       tableData: [],
@@ -189,10 +224,11 @@ export default {
     //  清空所有
     clearAllSearch() {
       this.form = {
-        name: '',
         code: '',
         type: '',
-        category: ''
+        time: '',
+        username: '',
+        phone: ''
       }
       //点击清空所有 同时关闭高级搜索
       this.$refs.buttonSearch[this.tabIndex].closeSuperSearch()
