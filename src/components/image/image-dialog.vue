@@ -6,12 +6,16 @@
       <!--头部-->
       <el-header>
         <div class="header-wrapper">
-          <el-select placeholder="请选择图片排序方式" size="mini" v-model="searchFrom.order">
-            <el-option label="区域一" value="上海"></el-option>
-            <el-option label="区域二" value="北京"></el-option>
+          <el-select placeholder="请选择图片排序方式" size="mini"
+                     v-model="searchFrom.order">
+            <el-option label="降序" value="desc"></el-option>
+            <el-option label="升序" value="asc"></el-option>
           </el-select>
-          <el-input size="mini" placeholder="请选择相册名称" v-model="searchFrom.keyword"></el-input>
-          <el-button type="success" size="mini">搜索</el-button>
+          <el-input size="mini" placeholder="请选择图片名称"
+                    v-model="searchFrom.keyword"></el-input>
+          <el-button type="success" size="mini"
+                     @click="getImageList">搜索
+          </el-button>
         </div>
         <el-button
             type="warning" size="mini"
@@ -21,12 +25,12 @@
       </el-header>
       <el-container>
         <!--侧边栏-->
-        <el-aside width="200px">
+        <el-aside width="200px" v-loading="asideLoading">
           <div>
             <ul class="list-group list-group-flush">
               <albumItem v-for="(item,index) in albums" :key="index"
                          :item="item" :index="index"
-                         :active="albumsIndex===index"
+                         :active="albumIndex===index"
                          @change="albumChange"
                          :show-options="false"/>
             </ul>
@@ -34,7 +38,7 @@
         </el-aside>
         <el-container>
           <!--主内容-->
-          <el-main>
+          <el-main v-loading="mainLoading">
             <el-row :gutter="10">
               <el-col :span="24" :lg="4" :md="6" :sm="8"
                       v-for="(item,index) in imageList" :key="index">
@@ -66,8 +70,18 @@
       <el-footer class="border-top d-flex align-items-center px-0 border-right">
         <div class="footer-btn">
           <el-button-group>
-            <el-button size="mini">上一页</el-button>
-            <el-button size="mini">下一页</el-button>
+            <el-button
+                size="mini"
+                :disabled="albumPage===1"
+                @click="changeAlbumPage('pre')"
+            >上一页
+            </el-button>
+            <el-button
+                size="mini"
+                @click="changeAlbumPage('next')"
+                :disabled="albumPage === Math.ceil(albumTotal / 10)"
+            >下一页
+            </el-button>
           </el-button-group>
         </div>
         <div class="footer-pagination">
@@ -75,10 +89,10 @@
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page="currentPage"
-              :page-sizes="[100, 200, 300, 400]"
-              :page-size="100"
+              :page-sizes="pageSizes"
+              :page-size="pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400">
+              :total="total">
           </el-pagination>
         </div>
       </el-footer>
@@ -112,42 +126,95 @@ export default {
         keyword: ''
       },
       albums: [],
-      albumsIndex: 0,
+      albumPage: 1,    //分页
+      albumIndex: 0,   //当前选中相册
+      albumTotal: 0,   //相册总条数
 
       imageList: [],
+
       //选中图片的数组
       chooseImageList: [],
-      currentPage: 1
+      currentPage: 1,
+      pageSize: 10, //当前页面
+      pageSizes: [10, 20, 50, 100],//页面条数选项
+      total: 100, //总条数
+
+
+      asideLoading: false,
+      mainLoading: false,
     }
   },
-  created() {
-    this.__init()
+  computed: {
+    albumModelTitle() {
+      return this.albumEditIndex > -1 ? '修改相册' : '创建相册'
+    },
+    // 选中相册id
+    image_class_id() {
+      let item = this.albums[this.albumIndex]
+      // console.log('item', item)
+      if (item) {
+        return item.id
+      }
+      return 0
+    },
+    //  当前选中相册的图片列表url
+    getImageListUrl() {
+      let other = ''
+      if (this.searchFrom.keyword !== '') {
+        other = `&keyword=${this.searchFrom.keyword}`
+      }
+      return `/admin/imageclass/${this.image_class_id}/image/${this.currentPage}?limit=${this.pageSize}&order=${this.searchFrom.order}${other}`
+    }
+
   },
   methods: {
     //初始化
     __init() {
-      for (let i = 0; i < 20; i++) {
-        this.albums.push({
-          name: '相册' + i,
-          num: Math.floor(Math.random() * 10),
-          order: 0
-        })
-      }
+      this.asideLoading = true
 
-      for (let i = 0; i < 30; i++) {
-        this.imageList.push({
-          id: i,
-          url: 'https://www.apple.com/newsroom/images/product/mac/standard/Apple-Mac-Studio-Studio-Display-hero-220308_big.jpg.slideshow-xlarge_2x.jpg',
-          name: '图片' + i,
-          isCheck: false,
-          checkOrder: 0
-        })
-      }
-
+      //获取相册列表
+      this.axios.get('/admin/imageclass/' + this.albumPage, {
+        token: true
+      }).then(res => {
+        let result = res.data.data
+        this.albums = result.list
+        this.albumTotal = result.totalCount
+        // console.log(result)
+        this.asideLoading = false
+        //  获取选中相册下的第一页图片列表
+        this.getImageList()
+      }).catch(err => {
+        this.asideLoading = false
+      })
     },
+    //获取对应相册下的图片列表
+    getImageList() {
+      this.mainLoading = true
+      this.axios.get(this.getImageListUrl, {
+        token: true
+      }).then(res => {
+        let result = res.data.data
+        // console.log(result)
+        this.imageList = result.list.map(item => {
+          return {
+            id: item.id,
+            url: item.url,
+            name: item.name,
+            isCheck: false,
+            checkOrder: 0
+          }
+        })
+        this.total = result.totalCount
+        this.mainLoading = false
+      }).catch(err => {
+        this.mainLoading = false
+      })
+    },
+
     //切换相册方法
     albumChange(index) {
-      this.albumsIndex = index
+      this.albumIndex = index
+      this.getImageList()
     },
     //  修改图片名称
     editImageName(item, index) {
@@ -276,16 +343,26 @@ export default {
     showChooseImage(callback) {
       //取消选中图片
       this.unChoose()
+      this.__init()
       this.imageModel = true
       this.callback = callback
 
     },
     //关闭弹出层
     hide() {
-
       this.imageModel = false
       this.callback = false
     },
+    //  上下页
+    changeAlbumPage(type) {
+      if (type === 'pre') {
+        this.albumPage--
+      } else {
+        this.albumPage++
+      }
+      this.__init()
+    },
+
     //确定
     confirm() {
       //选中的图片url
@@ -317,6 +394,7 @@ export default {
       right: 0;
       bottom: 60px;
       background: #fff;
+      border-right: 1px solid #ccc;
     }
 
     > .el-container {
@@ -343,6 +421,7 @@ export default {
 
               img {
                 width: 100%;
+                height: 150px;
               }
 
               .text {

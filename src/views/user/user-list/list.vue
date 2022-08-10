@@ -70,11 +70,10 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="300">
+      <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="openModel(scope)">修改</el-button>
-          <el-button type="text" size="mini">重置密码</el-button>
-          <el-button type="text" size="mini" @click="deleteItem(scope)">删除</el-button>
+          <el-button type="text" size="mini" @click="deleteItem(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -196,7 +195,7 @@ export default {
   methods: {
     //获取列表
     getListResult(e) {
-      console.log(e)
+      // console.log(e)
       this.tableData = e.list
       this.user_level = e.user_level
     },
@@ -274,7 +273,7 @@ export default {
 
     // 选择头像
     chooseImage() {
-      this.app.chooseImage((res) => {
+      this.app.showChooseImage((res) => {
         this.form.avatar = res[0].url
       }, 1)
     }

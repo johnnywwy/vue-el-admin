@@ -54,14 +54,13 @@ export default {
     //获取列表
     getList() {
       if (this.preURL === '') return
-
+      this.showLoading()
       let url = this.getListURL()
       this.axios.get(url, {
         token: true
       }).then(res => {
         let data = res.data.data
         this.page.total = data.totalCount
-
         //往外暴露列表结果
         this.getListResult(data)
         this.tableData = data.list

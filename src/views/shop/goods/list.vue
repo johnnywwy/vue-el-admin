@@ -8,7 +8,7 @@
         <button-search placeholder="要搜索的商品名称" ref="buttonSearch" @search="search">
           <template #left>
             <!--左边按钮-->
-            <router-link :to="{name:'shop_goods_create'}" class="mr-2">
+            <router-link :to="{name:'shop_goods_create'}">
               <el-button type="success" size="mini">发布商品</el-button>
 
             </router-link>

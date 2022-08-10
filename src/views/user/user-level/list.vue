@@ -156,7 +156,7 @@ export default {
   },
   data() {
     return {
-      preUrl:"user_level",
+      preURL:"user_level",
 
       level:0,
       tableData:[],

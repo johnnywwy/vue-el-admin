@@ -9,7 +9,7 @@
             <el-option label="降序" value="desc"></el-option>
             <el-option label="升序" value="asc"></el-option>
           </el-select>
-          <el-input size="mini" placeholder="请选择相册名称"
+          <el-input size="mini" placeholder="请选择图片名称"
                     v-model="searchFrom.keyword"></el-input>
           <el-button type="success" size="mini" @click="getImageList">搜索</el-button>
         </div>

@@ -83,7 +83,7 @@ export default {
         subActive: '0',
         submenu: [
           {
-            icon: 'el-icon-s-claim',
+            icon: 'el-icon-s-home',
             name: '会员列表',
             pathname: 'user_user-list_list'
           }, {
