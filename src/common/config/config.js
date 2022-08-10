@@ -86,6 +86,10 @@ export default {
             icon: 'el-icon-s-claim',
             name: '会员列表',
             pathname: 'user_user-list_list'
+          }, {
+            icon: 'el-icon-s-claim',
+            name: '会员等级',
+            pathname: 'user_user-level_list'
           }
 
         ]

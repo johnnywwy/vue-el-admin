@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <button-search class="pb-3" placeholder="手机号/邮箱/会员名称">
+    <button-search class="pb-3" placeholder="手机号/邮箱/会员名称" @search="searchEvent">
       <template #left>
         <!--左边按钮-->
         <el-button type="success" size="mini"
@@ -14,19 +14,10 @@
             <el-input v-model="search.keyword" placeholder="手机号/邮箱/会员名称" size="mini"></el-input>
           </el-form-item>
           <el-form-item label="会员等级" class="mb-0">
-            <el-select v-model="search.group_id" placeholder="请选择会员等级" size="mini">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="search.user_level_id" placeholder="请选择会员等级" size="mini">
+              <el-option :label="item.name" :value="item.id" :key="index"
+                         v-for="(item,index) in user_level"></el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="发布时间" class="mb-0">
-            <el-date-picker size="mini"
-                            v-model="search.time"
-                            type="daterange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-            </el-date-picker>
           </el-form-item>
           <el-form-item class="mb-0">
             <el-button type="info" @click="searchEvent" size="mini">搜索</el-button>
@@ -47,8 +38,9 @@
             <div class="media-body">
               <h6 class="mt-0 d-flex align-items-center">
                 {{ scope.row.username }}
-                用户名
-                <el-button class="ml-auto" type="text" size="mini">详情</el-button>
+                <el-button class="ml-auto" type="text" size="mini"
+                >详情
+                </el-button>
               </h6>
               <span class="mt-0 d-flex align-items-center">
                 用户id：{{ scope.row.id }}
@@ -74,7 +66,7 @@
               :type="scope.row.status ? 'success' : 'danger'"
               size="mini"
               @click="changeStatus(scope.row)"
-              plain>{{scope.row.status ? '启用' : '禁用'}}
+              plain>{{ scope.row.status ? '启用' : '禁用' }}
           </el-button>
         </template>
       </el-table-column>
@@ -204,14 +196,11 @@ export default {
   methods: {
     //获取列表
     getListResult(e) {
+      console.log(e)
       this.tableData = e.list
       this.user_level = e.user_level
     },
-    // 获取请求列表分页url
-    // getListUrl(){
-    //   return `/admin/${this.preUrl}/${this.page.current}?limit=${this.page.size}&keyword=${this.search.keyword}&user_level_id=${this.search.user_level_id}`
-    // },
-    //打开模态框
+
     // 打开模态框
     openModel(e = false) {
       // 增加
@@ -255,6 +244,11 @@ export default {
       this.addOrEdit(this.form, id)
       // 关闭模态框
       this.createModel = false
+    },
+
+    // 获取请求列表分页url
+    getListURL() {
+      return `/admin/${this.preURL}/${this.page.current}?limit=${this.page.size}&keyword=${this.search.keyword}&user_level_id=${this.search.user_level_id}`
     },
 
 

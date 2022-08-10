@@ -79,10 +79,10 @@ let routes = [
         meta: {title: '会员列表'},
         component: 'user/user-list/list',
       },
-      // {
-      //   meta: {title: '物流设置'},
-      //   component: 'set/express/index',
-      // },
+      {
+        meta: {title: '会员等级'},
+        component: 'user/user-level/list',
+      },
 
     ]
   },
