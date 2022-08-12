@@ -35,15 +35,15 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### 首页
 ![img_3.png](./previewImage/img_3.png)
 
-###商品页面
+### 商品页面
 ![img_4.png](./previewImage/img_4.png)
 
-###订单页面
+### 订单页面
 ![img_5.png](./previewImage/img_5.png)
 
-###会员页面
+### 会员页面
 ![img_6.png](./previewImage/img_6.png)
 
-###设置页面
+### 设置页面
 ![img_7.png](./previewImage/img_7.png)
 
