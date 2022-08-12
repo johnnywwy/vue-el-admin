@@ -1,7 +1,7 @@
 <template>
   <div
       class="bg-white px-3"
-      style="margin: -20px; margin-top: -1rem; margin-bottom: 0 !important"
+      style="margin: -20px; margin-top: -15px; margin-bottom: 0 !important"
   >
     <el-tabs v-model="activeName">
       <el-tab-pane label="注册与访问" name="first">

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white px-3" style="margin: -20px;margin-top: -1rem;margin-bottom: 0!important;">
+  <div class="bg-white px-3" style="margin: -20px;margin-top: -15px;margin-bottom: 0!important;">
     <el-tabs v-model="activeName">
       <el-tab-pane label="运费模板" name="second">
         <div>

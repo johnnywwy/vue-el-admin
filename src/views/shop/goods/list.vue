@@ -1,302 +1,333 @@
 <template>
-  <div class="wrapper">
-    <el-tabs class="el-tabs-wrapper"
-             v-model="tabIndex"
-             @tab-click="handleClick">
-      <el-tab-pane :label="tab.name" :key="tabIndex"
-                   v-for="(tab,tabIndex) in tabBars">
-        <button-search placeholder="要搜索的商品名称" ref="buttonSearch" @search="search">
-          <template #left>
-            <!--左边按钮-->
-            <router-link :to="{name:'shop_goods_create'}">
-              <el-button type="success" size="mini">发布商品</el-button>
+  <div class="bg-white px-3" style="margin: -20px;margin-top: -15px;margin-bottom: 0!important;">
 
-            </router-link>
-            <el-button type="danger" size="mini">批量删除</el-button>
-            <el-button type="warning" size="mini">恢复商品</el-button>
-            <el-button size="mini">上架</el-button>
-            <el-button size="mini">下架</el-button>
-            <el-button size="mini">推荐</el-button>
-          </template>
-          <!--高级搜索表单-->
-          <template #form>
-            <el-form :inline="true" :model="form" class="demo-form-inline">
-              <el-form-item label="商品名称" class="mb-0">
-                <el-input v-model="form.name" placeholder="请输入商品名称" size="mini"></el-input>
-              </el-form-item>
-              <el-form-item label="商品编码" class="mb-0">
-                <el-input v-model="form.code" placeholder="请输入商品编码" size="mini"></el-input>
-              </el-form-item>
-              <el-form-item label="商品类型" class="mb-0">
-                <el-select v-model="form.type" placeholder="活动区域" size="mini">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="商品分类" class="mb-0">
-                <el-input v-model="form.category" placeholder="请输入商品分类" size="mini">
-                </el-input>
-              </el-form-item>
-              <el-form-item class="mb-0">
-                <el-button type="info" @click="search" size="mini">搜索</el-button>
-                <el-button type="danger" size="mini" @click="clearAllSearch">清空删选条件</el-button>
-              </el-form-item>
-            </el-form>
-          </template>
-        </button-search>
-        <!--商品列表-->
-        <el-table border :data="tableData[tabIndex].list" style="width: 100%"
-                  class="table-wrapper" @selection-change="handleSelectionChange">
-          <!--多选-->
-          <el-table-column type="selection" width=45 align="center"></el-table-column>
-          <!--表头-->
-          <el-table-column prop="title" label="商品" width="380">
-            <template slot-scope="scope">
-              <div class="media commodity">
-                <img :src="scope.row.cover" class="mr-3" height="60px" alt="">
-                <div class="media-body">
-                  <h6>{{ scope.row.title }}</h6>
-                  <p>分类：{{ scope.row.category }}</p>
-                  <p>时间：{{ scope.row.create_time }}</p>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="type" label="商品类型" align="center">
-          </el-table-column>
-          <el-table-column prop="sale_count" label="实际销量" align="center">
-          </el-table-column>
-          <el-table-column label="商品排序" align="center" prop="order"></el-table-column>
-          <el-table-column prop="status" label="商品状态" align="center">
-            <template slot-scope="scope">
-              <el-button type="success" size="mini"
-                         plain @click="scope.row.isCheck=1">审核通过
-              </el-button>
-              <el-button type="danger" size="mini" class="ml-0 mt-1"
-                         plain @click="scope.row.isCheck=2">审核拒绝
-              </el-button>
-            </template>
-          </el-table-column>
-          <el-table-column prop="stock" label="总库存" align="center">
-          </el-table-column>
-          <el-table-column prop="price" label="价格" align="center"></el-table-column>
-          <el-table-column label="操作" align="center" width="150">
-            <template slot-scope="scope">
-              <el-button-group>
-                <el-button type="success" size="mini" plain>编辑</el-button>
-                <el-button
-                    type="danger" size="mini"
-                    plain @click="deleteItem(scope.$index)">删除
-                </el-button>
-              </el-button-group>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!--占位用的div-->
-        <div style="height: 60px;"></div>
-        <el-footer class="d-flex align-items-center px-0 border-top">
-          <div class="footer-pagination">
-            <el-pagination
-                :current-page="tableData[tabIndex].currentPage"
-                :page-sizes="[20, 50, 100, 200]"
-                :page-size="50"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="400">
-            </el-pagination>
-          </div>
-        </el-footer>
-      </el-tab-pane>
+    <el-tabs v-model="tabIndex" @tab-click="getList">
+      <el-tab-pane :label="tab.name" :key="tabI"
+                   v-for="(tab,tabI) in tabbars"></el-tab-pane>
     </el-tabs>
+
+
+    <button-search ref="buttonSearch"
+                   placeholder="要搜索的商品名称"
+                   @search="searchEvent">
+      <!-- 左边 -->
+      <template #left>
+        <router-link :to="{name:'shop_goods_create'}" class="mr-2">
+          <el-button type="success"
+                     size="mini">发布商品</el-button>
+        </router-link>
+        <el-button type="warning"
+                   size="mini" v-if="tab === 'delete'" @click="doEvent('restore')">恢复商品</el-button>
+        <el-button type="danger"
+                   size="mini" v-if="tab === 'delete'" @click="doEvent('destroy')">彻底删除</el-button>
+        <el-button type="danger"
+                   size="mini" v-if="tab != 'delete'" @click="deleteAll">批量删除</el-button>
+        <el-button size="mini" v-if="tab === 'all' || tab === 'off'" @click="changeStatus(1)">上架</el-button>
+        <el-button size="mini" v-if="tab === 'all' || tab === 'saling'" @click="changeStatus(0)">下架</el-button>
+      </template>
+      <!-- 高级搜索表单 -->
+      <template #form>
+        <el-form inline ref="form" :model="form"
+                 label-width="80px">
+          <el-form-item label="商品名称" class="mb-0">
+            <el-input v-model="form.title"
+                      placeholder="商品名称"
+                      size="mini"></el-input>
+          </el-form-item>
+          <el-form-item label="商品分类" class="mb-0">
+            <el-select v-model="form.category_id" placeholder="请选择商品分类"
+                       size="mini">
+              <el-option
+                  v-for="item in cateOptions"
+                  :key="item.id"
+                  :label="item | tree"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="mb-0">
+            <el-button type="info" size="mini"
+                       @click="searchEvent">
+              搜索</el-button>
+            <el-button size="mini"
+                       @click="clearSearch">清空筛选条件</el-button>
+          </el-form-item>
+        </el-form>
+      </template>
+    </button-search>
+
+    <!-- 商品列表 -->
+    <el-table border class="mt-3"
+              :data="tableData"
+              style="width: 100%"
+              @selection-change="handleSelectionChange">
+      <el-table-column
+          type="selection"
+          width="45"
+          align="center">
+      </el-table-column>
+
+      <el-table-column
+          label="商品"
+          width="300">
+        <template slot-scope="scope">
+          <div class="media">
+            <img class="mr-3" style="width: 60px;height: 60px;" :src="scope.row.cover">
+            <div class="media-body">
+              <p class="mt-0">{{scope.row.title}}</p>
+              <p class="mb-0">分类：{{scope.row.category.name}}</p>
+              <p class="mb-0">时间：{{scope.row.create_time}}</p>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+          align="center"
+          prop="sale_count"
+          width="80"
+          label="实际销量">
+      </el-table-column>
+      <el-table-column
+          prop="status"
+          align="center"
+          label="商品状态"
+          width="80">
+        <template slot-scope="scope">
+          <span class="badge" :class="scope.row.status ? 'badge-success' : 'badge-danger'">{{scope.row.status ? '上架' : '仓库'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="status"
+          align="center"
+          width="120"
+          label="审核状态">
+        <template slot-scope="scope">
+          <div class="d-flex flex-column" v-if="!scope.row.ischeck">
+            <el-button
+                type="success" size="mini"
+                @click="checkGoods(scope.row,1)"
+                plain>审核通过
+            </el-button>
+
+            <el-button class="ml-0 mt-2"
+                       type="danger" size="mini"
+                       @click="checkGoods(scope.row,2)"
+                       plain>审核拒绝
+            </el-button>
+          </div>
+          <span v-else>{{scope.row.ischeck === 1? '通过' : '拒绝'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="stock"
+          align="center"
+          width="90"
+          label="总库存">
+      </el-table-column>
+      <el-table-column
+          prop="pprice"
+          align="center"
+          label=" 价格(元)"
+          width="120"
+      >
+        <template slot-scope="scope">
+          <span class="text-danger">￥{{scope.row.min_price}}</span>
+          <span>/</span>
+          <span class="text-muted">￥{{scope.row.min_oprice}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          align="center"
+          label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="mini" @click="navigate('shop_goods_create',scope.row.id)">基础设置</el-button>
+          <el-button type="text" size="mini" @click="navigate('shop_goods_sku',scope.row.id)" :class="(scope.row.sku_type == 0 && !scope.row.sku_value) || (scope.row.sku_type == 1 && !scope.row.goods_skus.length) ? 'text-danger' : ''">商品规格</el-button>
+          <el-button type="text" size="mini" @click="navigate('shop_goods_attr',scope.row.id)" :class="scope.row.goods_attrs.length == 0 ? 'text-danger' : ''">商品属性</el-button>
+          <el-button type="text" size="mini" @click="navigate('shop_goods_banner',scope.row.id)" :class="scope.row.goods_banner.length == 0 ? 'text-danger' : ''">媒体设置</el-button>
+          <el-button type="text" size="mini" @click="navigate('shop_goods_content',scope.row.id)" :class="!scope.row.content ? 'text-danger' : ''">商品详情</el-button>
+          <el-button type="text" size="mini" >折扣设置</el-button>
+          <el-button type="text" size="mini" @click="deleteItem(scope.row)">删除商品</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div style="height: 60px;"></div>
+    <el-footer class="border-top d-flex align-items-center px-0 position-fixed bg-white" style="bottom: 0;left: 200px;right: 0;z-index: 100;">
+      <div style="flex: 1;" class="px-2">
+        <el-pagination
+            :current-page="page.current"
+            :page-sizes="page.sizes"
+            :page-size="page.size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="page.total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange">
+        </el-pagination>
+      </div>
+    </el-footer>
+
   </div>
 </template>
 
 <script>
 import buttonSearch from '../../../components/common/button-search'
-
+import common from '../../../common/mixins/common'
 export default {
+  mixins:[common],
+  inject:['layout'],
   components: {
     buttonSearch
   },
-  name: 'list',
   data() {
     return {
+      preURL:"goods",
+
       tabIndex: 0,
-      tabBars: [
-        {name: '审核中'},
-        {name: '出售中'},
-        {name: '已下架'},
-        {name: '库存预警'},
-        {name: '回收站'},
+      tabbars:[
+        { name:"全部",key:"all"},
+        { name:"审核中",key:"checking"},
+        { name:"出售中",key:"saling"},
+        { name:"已下架",key:"off"},
+        { name:"库存预警" ,key:"min_stock"},
+        { name:"回收站" ,key:"delete"},
       ],
-      form: {
-        name: '',
-        code: '',
-        type: '',
-        category: ''
+      form:{
+        title:"",
+        category_id:""
       },
-      //商品列表
       tableData: [],
-      //多选
-      multipleSelection: []
+      cateOptions:[]
+    }
+  },
+  filters: {
+    tree(item) {
+      if (item.level === 0) {
+        return item.name
+      }
+      let str = ''
+      for (let i = 0; i < item.level; i++) {
+        str += i === 0 ? '|--' : '--'
+      }
+      return str + ' ' +item.name;
+    }
+  },
+  computed: {
+    tab() {
+      return this.tabbars[this.tabIndex].key
+    },
+    params(){
+      let str = ''
+      for (let key in this.form) {
+        let val = this.form[key]
+        if(val){
+          str += `&${key}=${this.form[key]}`
+        }
+      }
+      return str
     }
   },
   created() {
-    this.__getData()
+
   },
   methods: {
-    __getData() {
-      for (let i = 0; i < this.tabBars.length; i++) {
-        this.tableData.push(
-            {
-              currentPage: 1,
-              list: []
-            }
-        )
-        for (let j = 0; j < 20; j++) {
-          this.tableData[i].list.push({
-            id: j,
-            title: '苹果手机iphone13' + '||' + i + '-' + j,
-            type: '普通商品',
-            cover:
-                'https://www.apple.com.cn/iphone/home/images/meta/iphone__btp62hy2cbea_og.png',
-            category: '手机',
-            create_time: '2019-01-01 12:11:11',
-            sale_count: 20,
-            order: 100,
-            status: 1,
-            stock: 20,
-            price: 1000,
-            isCheck: 1
-          })
-        }
-
-      }
+    navigate(name,id){
+      this.$router.push({
+        name,
+        params:{ id }
+      })
     },
-    //加载数据
-    handleClick(tab) {
-      console.log('tab.index', tab.index)
+    // 获取请求列表分页url
+    getListURL(){
+      return `/admin/${this.preURL}/${this.page.current}?limit=${this.page.size}&tab=${this.tab}${this.params}`
     },
-    //提交高级搜索
-    search(e = false) {
-      //简单搜索
-      if (typeof e === 'string') {
-        return console.log('简单搜索', e)
-      }
-      //高级搜索
-      console.log('高级搜索')
-
+    getListResult(e){
+      console.log(e);
+      this.tableData = e.list
+      this.cateOptions = e.cates
     },
-    //  清空所有
-    clearAllSearch() {
+    // 上下架
+    changeStatus(item){
+      item.status = item.status === 1 ?  0 : 1
+    },
+    // 清空筛选条件
+    clearSearch(){
       this.form = {
-        name: '',
-        code: '',
-        type: '',
-        category: ''
+        title:"",
+        category_id:""
       }
-      //点击清空所有 同时关闭高级搜索
-      this.$refs.buttonSearch[this.tabIndex].closeSuperSearch()
     },
-    //多选
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    // 搜索事件
+    searchEvent(e = false){
+      // 简单搜索
+      if (typeof e === 'string') {
+        this.form.title = e
+      }
+      // 高级搜索
+      this.getList()
     },
-    //删除当前商品
-    deleteItem(index) {
-
-      this.$confirm('是否删除该商品', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.tableData[this.tabIndex].list.splice(index, 1)
-        // console.log(this.tabIndex, index)
+    doEvent(key){
+      if (this.ids.length === 0) {
+        return this.$message({
+          type:"error",
+          message:"请选择要操作的商品"
+        })
+      }
+      this.showLoading()
+      this.axios.post('/admin/goods/'+key,{
+        ids:this.ids
+      },{
+        token:true
+      }).then(res=>{
         this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
+          type:"success",
+          message:"操作成功"
+        })
+        this.getList()
+        this.hideLoading()
+      }).catch(err=>{
+        this.hideLoading()
+      })
+    },
+    // 上下架
+    changeStatus(status){
+      if (this.ids.length === 0) {
+        return this.$message({
+          type:"error",
+          message:"请选择要操作的商品"
+        })
+      }
+      this.showLoading()
+      this.axios.post('/admin/goods/changestatus',{
+        ids:this.ids,
+        status
+      },{ token:true }).then(res=>{
+        this.$message({
+          type:"success",
+          message:"操作成功"
+        })
+        this.getList()
+        this.hideLoading()
+      }).catch(err=>{
+        this.hideLoading()
+      })
+    },
+    checkGoods(item,ischeck){
+      this.layout.showLoading()
+      this.axios.post('/admin/goods/'+item.id+'/check',{
+        ischeck
+      },{ token:true }).then(res=>{
+        this.getList()
+        this.$message({
+          type:"success",
+          message:"操作成功"
+        })
+        this.layout.hideLoading()
+      }).catch(err=>{
+        this.layout.hideLoading()
       })
     }
-  }
-
-};
+  },
+}
 </script>
 
-<style lang="scss" scoped>
-.wrapper {
-  background: white;
-  margin: -20px;
-  margin-top: -15px;
-
-  .el-tabs-wrapper {
-    //border: 1px solid red;
-    padding: 0 15px 15px 15px;
-
-    .tab-content {
-      display: flex;
-      align-items: center;
-
-      .input {
-        margin-right: 1rem;
-        width: 150px;
-      }
-    }
-
-    .card-wrapper {
-      .header {
-        margin: -10px;
-      }
-
-      .el-form {
-        .el-form-item {
-          .el-input {
-            width: 200px;
-          }
-
-          .el-select {
-            width: 200px;
-          }
-        }
-
-
-      }
-    }
-
-    .table-wrapper {
-      margin-top: 15px;
-
-      .commodity {
-        h6 {
-          font-weight: bold;
-          color: deepskyblue;
-          line-height: 25px;
-        }
-
-        p {
-          color: #929392;
-          line-height: 18px;
-        }
-      }
-    }
-
-    .el-footer {
-      position: fixed;
-      bottom: 0;
-      left: 200px;
-      right: 0;
-      background: #fff;
-      z-index: 100;
-
-      .footer-pagination {
-        padding-left: 10px;
-        display: flex;
-        align-items: center;
-        flex: 1;
-        //border: 1px solid red;
-
-
-      }
-    }
-  }
-}
+<style>
 </style>
